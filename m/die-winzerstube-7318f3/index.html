@@ -1,0 +1,302 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Die Winzerstube – Frische Küche und herzliche Gastfreundschaft</title>
+<meta name="description" content="Die Winzerstube – Frische Küche und herzliche Gastfreundschaft">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --accent: #c0392b;
+    --accent2: #e67e22;
+    --tint: #fdf0ec;
+    --ink: #1f2733;
+    --muted: #5b6572;
+  }
+  html { scroll-behavior: smooth; }
+  html, body { overflow-x: hidden; max-width: 100%; }
+  body { color: var(--ink); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+  img { max-width: 100%; }
+  .text-accent { color: var(--accent); }
+  .bg-accent { background: var(--accent); }
+  .bg-tint { background: var(--tint); }
+  .border-accent { border-color: var(--accent); }
+  [id] { scroll-margin-top: 90px; }
+  .gradient-accent {
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+    background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: slide 8s linear infinite;
+  }
+  @keyframes slide { to { background-position: 300% 0; } }
+  .hero-img { animation: float 7s ease-in-out infinite alternate; }
+  @keyframes float { from { transform: translateY(-8px);} to { transform: translateY(8px);} }
+  .fade-up { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .fade-up.show { opacity: 1; transform: none; }
+  .card { transition: transform .3s ease, box-shadow .3s ease; }
+  .card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,.10); }
+  .gal img { transition: transform .5s ease; }
+  .gal:hover img { transform: scale(1.06); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+  .faq.open .faq-a { max-height: 320px; }
+  .faq.open .faq-i { transform: rotate(180deg); }
+  .btn-primary { background: var(--accent); color:#fff; transition: filter .2s ease, transform .2s ease; }
+  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-2px); }
+  .btn-ghost { border:1px solid var(--accent); color: var(--accent); transition: all .2s ease; }
+  .btn-ghost:hover { background: var(--accent); color:#fff; }
+  @media (prefers-reduced-motion: reduce) {
+    .gradient-accent, .hero-img { animation: none; }
+    .fade-up { opacity:1; transform:none; transition:none; }
+  }
+</style>
+</head>
+<body class="bg-white">
+
+<!-- Hinweis-Banner -->
+<div class="text-white text-center text-xs sm:text-sm py-2 px-4" style="background:#111827">
+  Unverbindlicher Design-Vorschlag von Pexuscode ·
+  <a class="underline" href="tel:+4916095530838">+49 160 95530838</a> ·
+  <a class="underline" href="mailto:pexuscodede@gmail.com">pexuscodede@gmail.com</a>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b" style="border-color:#eef1f5">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2 font-extrabold text-lg tracking-tight">
+      <span class="inline-flex w-9 h-9 rounded-lg items-center justify-center text-white bg-accent">
+        <i class="fas fa-utensils"></i>
+      </span>
+      <span>Die Winzerstube</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-7 text-sm font-medium">
+      <a href="#leistungen" class="hover:text-accent">Das erwartet Sie</a>
+      <a href="#galerie" class="hover:text-accent">Galerie</a>
+      <a href="#ueber" class="hover:text-accent">Über uns</a>
+      <a href="#kontakt" class="hover:text-accent">Kontakt</a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <a href="tel:+493712679948"
+         class="hidden sm:inline-flex btn-primary px-4 py-2 rounded-full text-sm font-semibold">
+        <i class="fas fa-phone mr-2"></i>Anrufen
+      </a>
+      <button id="burger" class="md:hidden text-2xl" aria-label="Menü"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+  <nav id="mobile-nav" class="hidden md:hidden px-4 pb-4 flex-col gap-3 text-sm font-medium bg-white border-b" style="border-color:#eef1f5">
+    <a href="#leistungen" class="block py-1">Das erwartet Sie</a>
+    <a href="#galerie" class="block py-1">Galerie</a>
+    <a href="#ueber" class="block py-1">Über uns</a>
+    <a href="#kontakt" class="block py-1">Kontakt</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section id="top" class="bg-tint">
+  <div class="max-w-6xl mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
+    <div class="fade-up">
+      <span class="inline-block text-xs font-semibold uppercase tracking-wider text-accent mb-4">
+        Restaurant &amp; Küche
+      </span>
+      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">
+        Genuss mit <span class="gradient-accent">Herz</span> und Gastfreundschaft
+      </h1>
+      <p class="text-lg mb-8" style="color:var(--muted)">Frische Küche und herzliche Gastfreundschaft.</p>
+      <div class="flex flex-wrap gap-3">
+        <a href="#kontakt" class="btn-primary px-6 py-3 rounded-full font-semibold">Termin anfragen</a>
+        <a href="#leistungen" class="btn-ghost px-6 py-3 rounded-full font-semibold">Leistungen ansehen</a>
+      </div>
+    </div>
+    <div class="fade-up">
+      <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Die Winzerstube" loading="lazy"
+           class="hero-img rounded-2xl shadow-2xl w-full h-72 md:h-96 object-cover">
+    </div>
+  </div>
+</section>
+
+<!-- Leistungen -->
+<section id="leistungen" class="max-w-6xl mx-auto px-4 py-16">
+  <div class="text-center mb-12 fade-up">
+    <h2 class="text-3xl font-bold mb-3">Das erwartet Sie</h2>
+    <p class="max-w-2xl mx-auto" style="color:var(--muted)">Ehrliche Küche, gemütliches Ambiente und ein Team, das gern für Sie da ist.</p>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    
+    <div class="card fade-up bg-white rounded-2xl p-7 border" style="border-color:#eef1f5">
+      <div class="w-12 h-12 rounded-xl bg-tint flex items-center justify-center text-accent text-xl mb-4">
+        <i class="fas fa-utensils"></i>
+      </div>
+      <h3 class="text-lg font-semibold mb-2">Frische Küche</h3>
+      <p style="color:var(--muted)">Saisonale Gerichte aus regionalen Zutaten – täglich frisch für Sie zubereitet.</p>
+    </div>
+    
+    <div class="card fade-up bg-white rounded-2xl p-7 border" style="border-color:#eef1f5">
+      <div class="w-12 h-12 rounded-xl bg-tint flex items-center justify-center text-accent text-xl mb-4">
+        <i class="fas fa-champagne-glasses"></i>
+      </div>
+      <h3 class="text-lg font-semibold mb-2">Feiern &amp; Events</h3>
+      <p style="color:var(--muted)">Ob Familienfeier oder Firmenessen – wir richten Ihre Veranstaltung gern aus.</p>
+    </div>
+    
+    <div class="card fade-up bg-white rounded-2xl p-7 border" style="border-color:#eef1f5">
+      <div class="w-12 h-12 rounded-xl bg-tint flex items-center justify-center text-accent text-xl mb-4">
+        <i class="fas fa-bag-shopping"></i>
+      </div>
+      <h3 class="text-lg font-semibold mb-2">Außer Haus</h3>
+      <p style="color:var(--muted)">Ihre Lieblingsgerichte zum Mitnehmen – einfach vorbestellen und abholen.</p>
+    </div>
+    
+  </div>
+</section>
+
+<!-- Galerie -->
+<section id="galerie" class="bg-tint">
+  <div class="max-w-6xl mx-auto px-4 py-16">
+    <div class="text-center mb-12 fade-up">
+      <h2 class="text-3xl font-bold mb-3">Einblicke</h2>
+      <p class="max-w-2xl mx-auto" style="color:var(--muted)">Ein Eindruck von Die Winzerstube.</p>
+    </div>
+    <div class="grid sm:grid-cols-3 gap-5">
+      
+      <div class="gal fade-up rounded-2xl overflow-hidden shadow-md">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Die Winzerstube – Eindruck 1" loading="lazy"
+             class="w-full h-56 object-cover">
+      </div>
+      
+      <div class="gal fade-up rounded-2xl overflow-hidden shadow-md">
+        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Die Winzerstube – Eindruck 2" loading="lazy"
+             class="w-full h-56 object-cover">
+      </div>
+      
+      <div class="gal fade-up rounded-2xl overflow-hidden shadow-md">
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Die Winzerstube – Eindruck 3" loading="lazy"
+             class="w-full h-56 object-cover">
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+<!-- Über uns -->
+<section id="ueber" class="max-w-4xl mx-auto px-4 py-16 text-center fade-up">
+  <h2 class="text-3xl font-bold mb-5">Über uns</h2>
+  <p class="text-lg leading-relaxed" style="color:var(--muted)">Bei uns treffen ehrliche Küche und herzliche Gastfreundschaft aufeinander. Wir freuen uns darauf, Sie zu verwöhnen – ob zum Mittagstisch, Familienessen oder gemütlichen Abend.</p>
+  
+  
+</section>
+
+<!-- Öffnungszeiten + Kontakt -->
+<section id="kontakt" class="bg-tint">
+  <div class="max-w-6xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-8">
+    <div class="fade-up bg-white rounded-2xl p-8 border" style="border-color:#eef1f5">
+      <h3 class="text-xl font-semibold mb-6"><i class="fas fa-clock text-accent mr-2"></i>Öffnungszeiten</h3>
+      
+      <table class="w-full text-sm">
+        
+        <tr class="border-b last:border-0" style="border-color:#eef1f5">
+          <td class="py-2 font-medium">Di–Freitag</td>
+          <td class="py-2 text-right" style="color:var(--muted)">17:00+</td>
+        </tr>
+        
+      </table>
+      
+    </div>
+    <div class="fade-up bg-white rounded-2xl p-8 border" style="border-color:#eef1f5">
+      <h3 class="text-xl font-semibold mb-6"><i class="fas fa-location-dot text-accent mr-2"></i>Kontakt</h3>
+      <ul class="space-y-4 text-sm">
+        <li class="flex gap-3"><i class="fas fa-map-marker-alt text-accent mt-1"></i>
+          <span>Adresse auf Anfrage</span></li>
+        
+        <li class="flex gap-3"><i class="fas fa-phone text-accent mt-1"></i>
+          <a href="tel:+493712679948" class="hover:text-accent">+49 371 2679948</a></li>
+        
+        
+        <li class="flex gap-3"><i class="fas fa-envelope text-accent mt-1"></i>
+          <a href="mailto:karoline@wagner-winzerwein.de" class="hover:text-accent">karoline@wagner-winzerwein.de</a></li>
+        
+      </ul>
+      
+      <a href="tel:+493712679948"
+         class="btn-primary inline-flex mt-8 px-6 py-3 rounded-full font-semibold"><i class="fas fa-phone mr-2"></i>Jetzt anrufen</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+
+<section class="max-w-3xl mx-auto px-4 py-16">
+  <h2 class="text-3xl font-bold text-center mb-10 fade-up">Häufige Fragen</h2>
+  
+  <div class="faq fade-up border-b py-4 cursor-pointer" style="border-color:#eef1f5" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center">
+      <h3 class="font-medium">Kann ich einen Tisch reservieren?</h3>
+      <i class="faq-i fas fa-chevron-down text-accent transition-transform"></i>
+    </div>
+    <div class="faq-a"><p class="pt-3 text-sm" style="color:var(--muted)">Sehr gern – rufen Sie uns einfach an, wir halten Ihnen Ihren Wunschtisch bereit.</p></div>
+  </div>
+  
+  <div class="faq fade-up border-b py-4 cursor-pointer" style="border-color:#eef1f5" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center">
+      <h3 class="font-medium">Bieten Sie auch Speisen zum Mitnehmen an?</h3>
+      <i class="faq-i fas fa-chevron-down text-accent transition-transform"></i>
+    </div>
+    <div class="faq-a"><p class="pt-3 text-sm" style="color:var(--muted)">Ja, viele unserer Gerichte gibt es auch außer Haus. Bestellen Sie telefonisch vor.</p></div>
+  </div>
+  
+  <div class="faq fade-up border-b py-4 cursor-pointer" style="border-color:#eef1f5" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center">
+      <h3 class="font-medium">Richten Sie Feiern aus?</h3>
+      <i class="faq-i fas fa-chevron-down text-accent transition-transform"></i>
+    </div>
+    <div class="faq-a"><p class="pt-3 text-sm" style="color:var(--muted)">Ob Geburtstag, Familienfeier oder Firmenessen – sprechen Sie uns an, wir planen mit Ihnen.</p></div>
+  </div>
+  
+</section>
+
+
+<!-- Footer -->
+<footer class="text-white" style="background:#111827">
+  <div class="max-w-6xl mx-auto px-4 py-12 text-center">
+    <div class="text-xl font-extrabold mb-2">Die Winzerstube</div>
+    <p class="text-sm mb-6" style="color:#9aa4b2">
+       · +49 371 2679948
+    </p>
+    <p class="text-xs" style="color:#6b7280">© 2026 Die Winzerstube · Impressum · Datenschutz</p>
+    <p class="text-xs mt-4" style="color:#6b7280">
+      Design-Vorschlag erstellt von <a class="underline" href="https://www.pexuscode.de/">Pexuscode</a>, 09557 Flöha
+    </p>
+  </div>
+</footer>
+
+<script>
+  var burger = document.getElementById('burger'), mnav = document.getElementById('mobile-nav');
+  if (burger) burger.addEventListener('click', function () { mnav.classList.toggle('hidden'); mnav.classList.toggle('flex'); });
+  document.querySelectorAll('#mobile-nav a').forEach(function (a) {
+    a.addEventListener('click', function () { mnav.classList.add('hidden'); mnav.classList.remove('flex'); });
+  });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(function (el) { io.observe(el); });
+</script>
+</body>
+</html>
