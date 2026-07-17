@@ -1,281 +1,427 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Gasthaus Zur Silberstraße – Frische Küche und herzliche Gastfreundschaft</title>
-<meta name="description" content="Gasthaus Zur Silberstraße – Frische Küche und herzliche Gastfreundschaft">
+<title>Gasthaus „Zur Silberstraße" – Veranstaltungszentrum im Erzgebirge</title>
+<meta name="description" content="Feiern, Tagungen, Konzerte, Kegeln &amp; Bowling – der Festsaal des Erzgebirges in Großolbersdorf. Bis 400 Gäste, alles aus einer Hand.">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --accent: #c0392b;
-    --accent2: #e67e22;
-    --tint: #fdf0ec;
-    --ink: #1f2733;
-    --muted: #5b6572;
+    --bg: #171412;
+    --panel: #201c18;
+    --panel2: #272220;
+    --line: rgba(255,255,255,.08);
+    --silver: #b9c0c8;        /* Silber – die Silberstraße */
+    --copper: #c08a4e;        /* Kupfer/Amber – warm & rustikal */
+    --text: #f0ebe3;
+    --muted: #a59c8f;
   }
   html { scroll-behavior: smooth; }
-  html, body { overflow-x: hidden; max-width: 100%; }
-  body { color: var(--ink); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+  html, body { overflow-x: hidden; max-width: 100%; background: var(--bg); }
+  body { color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-weight: 300; }
   img { max-width: 100%; }
-  .text-accent { color: var(--accent); }
-  .bg-accent { background: var(--accent); }
-  .bg-tint { background: var(--tint); }
-  .border-accent { border-color: var(--accent); }
-  [id] { scroll-margin-top: 90px; }
-  .gradient-accent {
-    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
-    background-size: 300% 100%;
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    animation: slide 8s linear infinite;
+  [id] { scroll-margin-top: 96px; }
+
+  .font-display { font-family: 'Playfair Display', serif; }
+  .text-silver { color: var(--silver); }
+  .text-copper { color: var(--copper); }
+  .bg-panel { background: var(--panel); }
+  .border-line { border-color: var(--line); }
+
+  .label {
+    font-size: .7rem; letter-spacing: .35em; text-transform: uppercase;
+    color: var(--silver); font-weight: 500;
   }
-  @keyframes slide { to { background-position: 300% 0; } }
-  .hero-img { animation: float 7s ease-in-out infinite alternate; }
-  @keyframes float { from { transform: translateY(-8px);} to { transform: translateY(8px);} }
-  .fade-up { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
-  .fade-up.show { opacity: 1; transform: none; }
-  .card { transition: transform .3s ease, box-shadow .3s ease; }
-  .card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,.10); }
-  .gal img { transition: transform .5s ease; }
+  .hairline { width: 56px; height: 1px; background: var(--silver); opacity: .5; }
+
+  /* Hero */
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(23,20,18,.6) 0%, rgba(23,20,18,.75) 55%, var(--bg) 100%),
+      url('https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=2000&q=75') center/cover no-repeat;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    background: var(--copper); color: #1b130a;
+    font-weight: 500;
+    transition: filter .2s ease, transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 8px 28px rgba(192,138,78,.25);
+  }
+  .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+  .btn-ghost {
+    border: 1px solid rgba(185,192,200,.45); color: var(--text);
+    transition: all .25s ease;
+  }
+  .btn-ghost:hover { background: var(--silver); border-color: var(--silver); color: #14161a; }
+
+  /* Cards */
+  .card { background: var(--panel); border: 1px solid var(--line); transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+  .card:hover { transform: translateY(-6px); border-color: rgba(185,192,200,.35); box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+  .card-img { transition: transform .6s ease; }
+  .card:hover .card-img { transform: scale(1.05); }
+
+  .cap-badge {
+    background: rgba(185,192,200,.1); border: 1px solid rgba(185,192,200,.25);
+    color: var(--silver); font-size: .72rem; letter-spacing: .08em; white-space: nowrap;
+  }
+
+  /* Galerie */
+  .gal { position: relative; overflow: hidden; border-radius: .375rem; }
+  .gal img { transition: transform .6s ease; display: block; }
   .gal:hover img { transform: scale(1.06); }
-  .faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+  .gal::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(23,20,18,.55));
+    opacity: 0; transition: opacity .4s ease; pointer-events: none;
+  }
+  .gal:hover::after { opacity: 1; }
+
+  /* FAQ */
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
   .faq.open .faq-a { max-height: 320px; }
   .faq.open .faq-i { transform: rotate(180deg); }
-  .btn-primary { background: var(--accent); color:#fff; transition: filter .2s ease, transform .2s ease; }
-  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-2px); }
-  .btn-ghost { border:1px solid var(--accent); color: var(--accent); transition: all .2s ease; }
-  .btn-ghost:hover { background: var(--accent); color:#fff; }
+
+  /* Animationen */
+  .fade-up { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s ease; }
+  .fade-up.show { opacity: 1; transform: none; }
+  .d1 { transition-delay: .1s; } .d2 { transition-delay: .2s; } .d3 { transition-delay: .3s; }
+
+  /* Header scroll state */
+  #site-header { background: rgba(23,20,18,.35); backdrop-filter: blur(12px); transition: background .3s ease, border-color .3s ease; border-bottom: 1px solid transparent; }
+  #site-header.scrolled { background: rgba(23,20,18,.93); border-bottom-color: var(--line); }
+
   @media (prefers-reduced-motion: reduce) {
-    .gradient-accent, .hero-img { animation: none; }
-    .fade-up { opacity:1; transform:none; transition:none; }
+    .fade-up { opacity: 1; transform: none; transition: none; }
+    .card, .gal img, .card-img { transition: none; }
   }
 </style>
 </head>
-<body class="bg-white">
+<body>
 
 <!-- Hinweis-Banner -->
-<div class="text-white text-center text-xs sm:text-sm py-2 px-4" style="background:#111827">
+<div class="text-center text-xs sm:text-sm py-2 px-4" style="background:#0d0b0a; color:#8b8578">
   Unverbindlicher Design-Vorschlag von Pexuscode ·
-  <a class="underline" href="tel:+4916095530838">+49 160 95530838</a> ·
-  <a class="underline" href="mailto:pexuscodede@gmail.com">pexuscodede@gmail.com</a>
+  <a class="underline hover:text-white" href="tel:+4916095530838">+49 160 95530838</a> ·
+  <a class="underline hover:text-white" href="mailto:pexuscodede@gmail.com">pexuscodede@gmail.com</a>
 </div>
 
 <!-- Header -->
-<header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b" style="border-color:#eef1f5">
-  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-    <a href="#top" class="flex items-center gap-2 font-extrabold text-lg tracking-tight">
-      <span class="inline-flex w-9 h-9 rounded-lg items-center justify-center text-white bg-accent">
-        <i class="fas fa-utensils"></i>
-      </span>
-      <span>Gasthaus Zur Silberstraße</span>
+<header id="site-header" class="sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-3">
+      <span class="text-silver text-xl"><i class="fas fa-gem"></i></span>
+      <span class="font-display text-lg md:text-xl tracking-wide leading-tight">Gasthaus <span class="text-silver">„Zur Silberstra&szlig;e"</span></span>
     </a>
-    <nav class="hidden md:flex items-center gap-7 text-sm font-medium">
-      <a href="#leistungen" class="hover:text-accent">Das erwartet Sie</a>
-      <a href="#galerie" class="hover:text-accent">Galerie</a>
-      <a href="#ueber" class="hover:text-accent">Über uns</a>
-      <a href="#kontakt" class="hover:text-accent">Kontakt</a>
+    <nav class="hidden md:flex items-center gap-7 text-sm" style="color:var(--muted)">
+      <a href="#raeume" class="hover:text-white transition-colors">R&auml;umlichkeiten</a>
+      <a href="#anlaesse" class="hover:text-white transition-colors">Anl&auml;sse</a>
+      <a href="#catering" class="hover:text-white transition-colors">Catering</a>
+      <a href="#galerie" class="hover:text-white transition-colors">Galerie</a>
+      <a href="#kontakt" class="hover:text-white transition-colors">Kontakt</a>
     </nav>
     <div class="flex items-center gap-3">
-      <a href="tel:+49373699378"
-         class="hidden sm:inline-flex btn-primary px-4 py-2 rounded-full text-sm font-semibold">
-        <i class="fas fa-phone mr-2"></i>Anrufen
+      <a href="tel:+49373699378" class="hidden sm:inline-flex btn-primary px-5 py-2.5 rounded-sm text-sm items-center">
+        <i class="fas fa-phone mr-2 text-xs"></i>037369 9378
       </a>
-      <button id="burger" class="md:hidden text-2xl" aria-label="Menü"><i class="fas fa-bars"></i></button>
+      <button id="burger" class="md:hidden text-2xl text-silver" aria-label="Menü öffnen"><i class="fas fa-bars"></i></button>
     </div>
   </div>
-  <nav id="mobile-nav" class="hidden md:hidden px-4 pb-4 flex-col gap-3 text-sm font-medium bg-white border-b" style="border-color:#eef1f5">
-    <a href="#leistungen" class="block py-1">Das erwartet Sie</a>
+  <nav id="mobile-nav" class="hidden md:hidden px-4 pb-5 flex-col gap-4 text-sm" style="background:rgba(23,20,18,.97); color:var(--muted)">
+    <a href="#raeume" class="block py-1">R&auml;umlichkeiten</a>
+    <a href="#anlaesse" class="block py-1">Anl&auml;sse</a>
+    <a href="#catering" class="block py-1">Catering</a>
     <a href="#galerie" class="block py-1">Galerie</a>
-    <a href="#ueber" class="block py-1">Über uns</a>
     <a href="#kontakt" class="block py-1">Kontakt</a>
+    <a href="tel:+49373699378" class="btn-primary inline-flex self-start px-5 py-2.5 rounded-sm mt-1"><i class="fas fa-phone mr-2 text-xs"></i>Anrufen</a>
   </nav>
 </header>
 
 <!-- Hero -->
-<section id="top" class="bg-tint">
-  <div class="max-w-6xl mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
-    <div class="fade-up">
-      <span class="inline-block text-xs font-semibold uppercase tracking-wider text-accent mb-4">
-        Großolbersdorf · Restaurant &amp; Küche
-      </span>
-      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">
-        Genuss mit <span class="gradient-accent">Herz</span> und Gastfreundschaft
+<section id="top" class="relative -mt-[76px]">
+  <div class="hero-bg"></div>
+  <div class="relative max-w-6xl mx-auto px-4 pt-44 pb-28 md:pt-56 md:pb-40">
+    <div class="max-w-2xl fade-up show">
+      <p class="label mb-5">Gl&uuml;ck auf! · Gro&szlig;olbersdorf im Erzgebirge</p>
+      <h1 class="font-display text-4xl sm:text-5xl md:text-7xl leading-[1.08] mb-6">
+        Der Festsaal<br>
+        <span class="italic text-silver">des Erzgebirges.</span>
       </h1>
-      <p class="text-lg mb-8" style="color:var(--muted)">Frische Küche und herzliche Gastfreundschaft – in Großolbersdorf und Umgebung.</p>
-      <div class="flex flex-wrap gap-3">
-        <a href="#kontakt" class="btn-primary px-6 py-3 rounded-full font-semibold">Termin anfragen</a>
-        <a href="#leistungen" class="btn-ghost px-6 py-3 rounded-full font-semibold">Leistungen ansehen</a>
+      <p class="text-lg md:text-xl mb-10 max-w-xl" style="color:var(--muted)">
+        Hochzeiten, Firmenfeiern, Konzerte oder Kegelabende &mdash; eine der traditionsreichsten
+        Kulturst&auml;tten der Region, mit Platz f&uuml;r bis zu <span class="text-white font-normal">400 G&auml;ste</span>
+        und allem aus einer Hand.
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <a href="tel:+49373699378" class="btn-primary px-8 py-3.5 rounded-sm">Veranstaltung anfragen</a>
+        <a href="#raeume" class="btn-ghost px-8 py-3.5 rounded-sm font-medium">R&auml;umlichkeiten ansehen</a>
       </div>
-    </div>
-    <div class="fade-up">
-      <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Gasthaus Zur Silberstraße" loading="lazy"
-           class="hero-img rounded-2xl shadow-2xl w-full h-72 md:h-96 object-cover">
     </div>
   </div>
 </section>
 
-<!-- Leistungen -->
-<section id="leistungen" class="max-w-6xl mx-auto px-4 py-16">
-  <div class="text-center mb-12 fade-up">
-    <h2 class="text-3xl font-bold mb-3">Das erwartet Sie</h2>
-    <p class="max-w-2xl mx-auto" style="color:var(--muted)">Ehrliche Küche, gemütliches Ambiente und ein Team, das gern für Sie da ist.</p>
+<!-- Räumlichkeiten -->
+<section id="raeume" class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+  <div class="text-center mb-14 fade-up">
+    <p class="label mb-4">01 &mdash; Unsere R&auml;ume</p>
+    <h2 class="font-display text-4xl md:text-5xl mb-4">F&uuml;nf R&auml;ume, ein Haus</h2>
+    <div class="hairline mx-auto mb-5"></div>
+    <p class="max-w-2xl mx-auto" style="color:var(--muted)">Vom gro&szlig;en Saal mit B&uuml;hne bis zur gem&uuml;tlichen Gaststube &mdash; f&uuml;r jede Gr&ouml;&szlig;e der passende Rahmen.</p>
   </div>
-  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    
-    <div class="card fade-up bg-white rounded-2xl p-7 border" style="border-color:#eef1f5">
-      <div class="w-12 h-12 rounded-xl bg-tint flex items-center justify-center text-accent text-xl mb-4">
-        <i class="fas fa-utensils"></i>
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="card fade-up rounded-sm p-8 md:col-span-2 md:grid md:grid-cols-2 md:gap-8 md:items-center">
+      <div>
+        <div class="flex items-center gap-3 mb-3 flex-wrap">
+          <h3 class="font-display text-3xl">Gro&szlig;er Saal</h3>
+          <span class="cap-badge px-3 py-1 rounded-full uppercase">bis 400 G&auml;ste</span>
+        </div>
+        <p class="text-sm leading-relaxed mb-5" style="color:var(--muted)">
+          Ca. 400 m&sup2; mit B&uuml;hne (40 m&sup2;), Tonanlage, B&uuml;hnenbeleuchtung, Galerie und zwei Theken.
+          300 G&auml;ste an Tischen, bis 400 bei Reihenbestuhlung &mdash; die B&uuml;hne f&uuml;r Konzerte, Kabarett und gro&szlig;e Feste.
+        </p>
+        <ul class="text-sm space-y-2" style="color:var(--muted)">
+          <li><i class="fas fa-check text-copper mr-2"></i>B&uuml;hne mit Ton- &amp; Lichttechnik</li>
+          <li><i class="fas fa-check text-copper mr-2"></i>Galerie &amp; zwei Theken</li>
+          <li><i class="fas fa-check text-copper mr-2"></i>Tagungs- &amp; Messebestuhlung m&ouml;glich</li>
+        </ul>
       </div>
-      <h3 class="text-lg font-semibold mb-2">Frische Küche</h3>
-      <p style="color:var(--muted)">Saisonale Gerichte aus regionalen Zutaten – täglich frisch für Sie zubereitet.</p>
-    </div>
-    
-    <div class="card fade-up bg-white rounded-2xl p-7 border" style="border-color:#eef1f5">
-      <div class="w-12 h-12 rounded-xl bg-tint flex items-center justify-center text-accent text-xl mb-4">
-        <i class="fas fa-champagne-glasses"></i>
+      <div class="mt-6 md:mt-0 overflow-hidden rounded-sm">
+        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1000&q=70" alt="Festlich gedeckte Tafel im Saal" loading="lazy" class="card-img w-full h-56 md:h-72 object-cover">
       </div>
-      <h3 class="text-lg font-semibold mb-2">Feiern &amp; Events</h3>
-      <p style="color:var(--muted)">Ob Familienfeier oder Firmenessen – wir richten Ihre Veranstaltung gern aus.</p>
     </div>
-    
-    <div class="card fade-up bg-white rounded-2xl p-7 border" style="border-color:#eef1f5">
-      <div class="w-12 h-12 rounded-xl bg-tint flex items-center justify-center text-accent text-xl mb-4">
-        <i class="fas fa-bag-shopping"></i>
+    <div class="card fade-up d1 rounded-sm p-8">
+      <div class="flex items-center justify-between mb-3 gap-3">
+        <h3 class="font-display text-2xl">Vereinszimmer</h3>
+        <span class="cap-badge px-3 py-1 rounded-full uppercase">ca. 40</span>
       </div>
-      <h3 class="text-lg font-semibold mb-2">Außer Haus</h3>
-      <p style="color:var(--muted)">Ihre Lieblingsgerichte zum Mitnehmen – einfach vorbestellen und abholen.</p>
+      <p class="text-sm leading-relaxed" style="color:var(--muted)">Mit Musikanlage, eigener Theke und separater K&uuml;che &mdash; ideal f&uuml;r Familienfeiern und Vereinsabende.</p>
     </div>
-    
+    <div class="card fade-up d2 rounded-sm p-8">
+      <div class="flex items-center justify-between mb-3 gap-3">
+        <h3 class="font-display text-2xl">Gaststube</h3>
+        <span class="cap-badge px-3 py-1 rounded-full uppercase">ca. 35</span>
+      </div>
+      <p class="text-sm leading-relaxed" style="color:var(--muted)">Gem&uuml;tlich und rustikal, mit Musikanlage und Theke &mdash; der Rahmen f&uuml;r Feiern im kleineren Kreis.</p>
+    </div>
+    <div class="card fade-up d1 rounded-sm p-8">
+      <div class="flex items-center justify-between mb-3 gap-3">
+        <h3 class="font-display text-2xl">Western-Saloon</h3>
+        <span class="cap-badge px-3 py-1 rounded-full uppercase">ca. 30</span>
+      </div>
+      <p class="text-sm leading-relaxed" style="color:var(--muted)">Mit zwei Bowlingbahnen, Theke und Musikanlage &mdash; Geburtstag, Teamevent oder einfach ein geselliger Abend.</p>
+    </div>
+    <div class="card fade-up d2 rounded-sm p-8">
+      <div class="flex items-center justify-between mb-3 gap-3">
+        <h3 class="font-display text-2xl">Kegelanlage</h3>
+        <span class="cap-badge px-3 py-1 rounded-full uppercase">ca. 40</span>
+      </div>
+      <p class="text-sm leading-relaxed" style="color:var(--muted)">Zwei Kegelbahnen mit Gastraum, Theke und Musikanlage &mdash; auf Wunsch kombinierbar mit den Bowlingbahnen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Anlässe -->
+<section id="anlaesse" class="border-t border-b border-line" style="background:var(--panel)">
+  <div class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+    <div class="text-center mb-14 fade-up">
+      <p class="label mb-4">02 &mdash; Ihre Veranstaltung</p>
+      <h2 class="font-display text-4xl md:text-5xl mb-4">Ein Haus f&uuml;r jeden Anlass</h2>
+      <div class="hairline mx-auto mb-5"></div>
+      <p class="max-w-2xl mx-auto" style="color:var(--muted)">Rundum-Sorglos-Pakete zum Festpreis &mdash; von der ersten Idee &uuml;ber die Planung bis zum gelungenen Abend.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="card fade-up rounded-sm p-7">
+        <i class="fas fa-heart text-copper text-2xl mb-4"></i>
+        <h3 class="font-display text-2xl mb-2">Hochzeiten</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--muted)">Der sch&ouml;nste Tag verdient den gro&szlig;en Saal &mdash; mit Men&uuml; oder Buffet, Dekoration und Musik.</p>
+      </div>
+      <div class="card fade-up d1 rounded-sm p-7">
+        <i class="fas fa-champagne-glasses text-copper text-2xl mb-4"></i>
+        <h3 class="font-display text-2xl mb-2">Private &amp; Firmenfeiern</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--muted)">Geburtstage, Jugendweihen, Weihnachtsfeiern &mdash; privat oder gewerblich, gro&szlig; oder klein.</p>
+      </div>
+      <div class="card fade-up d2 rounded-sm p-7">
+        <i class="fas fa-people-group text-copper text-2xl mb-4"></i>
+        <h3 class="font-display text-2xl mb-2">Tagungen &amp; Seminare</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--muted)">Konferenzen, Ausstellungen und Messen &mdash; mit Technik, Bestuhlung und Verpflegung nach Bedarf.</p>
+      </div>
+      <div class="card fade-up rounded-sm p-7">
+        <i class="fas fa-music text-copper text-2xl mb-4"></i>
+        <h3 class="font-display text-2xl mb-2">Konzerte &amp; Kleinkunst</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--muted)">B&uuml;hne, Ton- und Lichttechnik f&uuml;r Konzerte, Kabarett, Shows und Tanzveranstaltungen.</p>
+      </div>
+      <div class="card fade-up d1 rounded-sm p-7">
+        <i class="fas fa-bowling-ball text-copper text-2xl mb-4"></i>
+        <h3 class="font-display text-2xl mb-2">Kegeln &amp; Bowling</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--muted)">Je zwei Kegel- und Bowlingbahnen &mdash; der aktive Abend mit Familie, Verein oder Kollegen.</p>
+      </div>
+      <div class="card fade-up d2 rounded-sm p-7">
+        <i class="fas fa-box-open text-copper text-2xl mb-4"></i>
+        <h3 class="font-display text-2xl mb-2">Rundum-Sorglos-Paket</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--muted)">Buffet oder Men&uuml;, Kabarett, Show, Musik und Tanz &mdash; komplette Betreuung zum Festpreis.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Catering -->
+<section id="catering" class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+  <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+    <div class="fade-up order-2 md:order-1 relative">
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=75"
+           alt="Festlich angerichtetes Buffet" loading="lazy"
+           class="rounded-sm w-full h-[380px] md:h-[500px] object-cover">
+      <div class="absolute -bottom-6 -right-6 hidden md:block card rounded-sm px-6 py-5">
+        <p class="font-display text-2xl text-silver">Alles aus einer Hand</p>
+        <p class="text-xs tracking-widest uppercase mt-1" style="color:var(--muted)">Zum Festpreis</p>
+      </div>
+    </div>
+    <div class="fade-up d1 order-1 md:order-2">
+      <p class="label mb-4">03 &mdash; Catering &amp; Service</p>
+      <h2 class="font-display text-4xl md:text-5xl mb-4">Auch bei Ihnen vor Ort</h2>
+      <div class="hairline mb-6"></div>
+      <p class="mb-8 leading-relaxed" style="color:var(--muted)">
+        Wir versorgen Sie mit allem, was Ihre Veranstaltung zum Erfolg werden l&auml;sst &mdash;
+        im Haus oder als Catering bei Ihnen. Von der ersten Idee &uuml;ber die Planung bis zum letzten Glas.
+      </p>
+      <ul class="space-y-4 text-sm">
+        <li class="flex gap-3"><i class="fas fa-utensils text-copper mt-1"></i><span><span class="text-white font-normal">Buffets &amp; Men&uuml;s</span> &mdash; nach Ihren W&uuml;nschen kalkuliert</span></li>
+        <li class="flex gap-3"><i class="fas fa-campground text-copper mt-1"></i><span><span class="text-white font-normal">Festzeltvermietung</span> &mdash; f&uuml;r Feste unter freiem Himmel</span></li>
+        <li class="flex gap-3"><i class="fas fa-beer-mug-empty text-copper mt-1"></i><span><span class="text-white font-normal">Schanktechnik-Verleih</span> &mdash; gek&uuml;hlt und betriebsbereit</span></li>
+        <li class="flex gap-3"><i class="fas fa-wand-magic-sparkles text-copper mt-1"></i><span><span class="text-white font-normal">Dekoration</span> &mdash; passend zu Ihrem Anlass</span></li>
+        <li class="flex gap-3"><i class="fas fa-martini-glass-citrus text-copper mt-1"></i><span><span class="text-white font-normal">Cocktailbar</span> &mdash; das Highlight f&uuml;r Ihre G&auml;ste</span></li>
+      </ul>
+      <a href="tel:+49373699378" class="btn-primary inline-flex mt-9 px-7 py-3.5 rounded-sm"><i class="fas fa-phone mr-2 text-xs"></i>Angebot anfragen</a>
+    </div>
   </div>
 </section>
 
 <!-- Galerie -->
-<section id="galerie" class="bg-tint">
-  <div class="max-w-6xl mx-auto px-4 py-16">
-    <div class="text-center mb-12 fade-up">
-      <h2 class="text-3xl font-bold mb-3">Einblicke</h2>
-      <p class="max-w-2xl mx-auto" style="color:var(--muted)">Ein Eindruck von Gasthaus Zur Silberstraße.</p>
+<section id="galerie" class="border-t border-b border-line" style="background:var(--panel)">
+  <div class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+    <div class="text-center mb-14 fade-up">
+      <p class="label mb-4">04 &mdash; Einblicke</p>
+      <h2 class="font-display text-4xl md:text-5xl mb-4">Feste, die in Erinnerung bleiben</h2>
+      <div class="hairline mx-auto"></div>
     </div>
-    <div class="grid sm:grid-cols-3 gap-5">
-      
-      <div class="gal fade-up rounded-2xl overflow-hidden shadow-md">
-        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Gasthaus Zur Silberstraße – Eindruck 1" loading="lazy"
-             class="w-full h-56 object-cover">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[160px] md:auto-rows-[200px]">
+      <div class="gal fade-up col-span-2 row-span-2">
+        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=70" alt="Festlich geschmückter Saal" loading="lazy" class="w-full h-full object-cover">
       </div>
-      
-      <div class="gal fade-up rounded-2xl overflow-hidden shadow-md">
-        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Gasthaus Zur Silberstraße – Eindruck 2" loading="lazy"
-             class="w-full h-56 object-cover">
+      <div class="gal fade-up d1">
+        <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=700&q=70" alt="Festlich gedeckte Tafel" loading="lazy" class="w-full h-full object-cover">
       </div>
-      
-      <div class="gal fade-up rounded-2xl overflow-hidden shadow-md">
-        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Gasthaus Zur Silberstraße – Eindruck 3" loading="lazy"
-             class="w-full h-56 object-cover">
+      <div class="gal fade-up d2">
+        <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=700&q=70" alt="Konzert auf der Bühne" loading="lazy" class="w-full h-full object-cover">
       </div>
-      
+      <div class="gal fade-up d2">
+        <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=700&q=70" alt="Rustikale Gaststube" loading="lazy" class="w-full h-full object-cover">
+      </div>
+      <div class="gal fade-up d3">
+        <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=700&q=70" alt="Cocktailbar" loading="lazy" class="w-full h-full object-cover">
+      </div>
     </div>
   </div>
 </section>
 
-<!-- Über uns -->
-<section id="ueber" class="max-w-4xl mx-auto px-4 py-16 text-center fade-up">
-  <h2 class="text-3xl font-bold mb-5">Über uns</h2>
-  <p class="text-lg leading-relaxed" style="color:var(--muted)">Bei uns treffen ehrliche Küche und herzliche Gastfreundschaft aufeinander. Wir freuen uns darauf, Sie zu verwöhnen – ob zum Mittagstisch, Familienessen oder gemütlichen Abend.</p>
-  
-  
-</section>
-
-<!-- Öffnungszeiten + Kontakt -->
-<section id="kontakt" class="bg-tint">
-  <div class="max-w-6xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-8">
-    <div class="fade-up bg-white rounded-2xl p-8 border" style="border-color:#eef1f5">
-      <h3 class="text-xl font-semibold mb-6"><i class="fas fa-clock text-accent mr-2"></i>Öffnungszeiten</h3>
-      
-      <p style="color:var(--muted)">Nach Vereinbarung – rufen Sie uns gern an.</p>
-      
-    </div>
-    <div class="fade-up bg-white rounded-2xl p-8 border" style="border-color:#eef1f5">
-      <h3 class="text-xl font-semibold mb-6"><i class="fas fa-location-dot text-accent mr-2"></i>Kontakt</h3>
-      <ul class="space-y-4 text-sm">
-        <li class="flex gap-3"><i class="fas fa-map-marker-alt text-accent mt-1"></i>
-          <span>Am Rathaus 1, 09432 Großolbersdorf</span></li>
-        
-        <li class="flex gap-3"><i class="fas fa-phone text-accent mt-1"></i>
-          <a href="tel:+49373699378" class="hover:text-accent">+49 37369 9378</a></li>
-        
-        
-        <li class="flex gap-3"><i class="fas fa-envelope text-accent mt-1"></i>
-          <a href="mailto:info@gasthaus-zur-silberstrasse.de" class="hover:text-accent">info@gasthaus-zur-silberstrasse.de</a></li>
-        
+<!-- Kontakt -->
+<section id="kontakt" class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+  <div class="text-center mb-14 fade-up">
+    <p class="label mb-4">05 &mdash; Planen Sie mit uns</p>
+    <h2 class="font-display text-4xl md:text-5xl mb-4">Kontakt &amp; Anfahrt</h2>
+    <div class="hairline mx-auto"></div>
+  </div>
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="card fade-up rounded-sm p-9">
+      <h3 class="font-display text-2xl mb-6"><i class="far fa-clock text-silver mr-3"></i>Termine &amp; Besichtigung</h3>
+      <p class="text-sm leading-relaxed mb-5" style="color:var(--muted)">
+        Ge&ouml;ffnet nach Vereinbarung &mdash; rufen Sie uns an, wir zeigen Ihnen gern unsere R&auml;ume
+        und planen Ihre Veranstaltung gemeinsam.
+      </p>
+      <ul class="space-y-4 text-sm" style="color:var(--muted)">
+        <li class="flex gap-3"><i class="fas fa-phone text-copper mt-1"></i>
+          <span>Telefon: <a href="tel:+49373699378" class="hover:text-white transition-colors">037369 9378</a></span></li>
+        <li class="flex gap-3"><i class="fas fa-mobile-screen text-copper mt-1"></i>
+          <span>Hotline: <a href="tel:+491735756770" class="hover:text-white transition-colors">0173 5756770</a></span></li>
+        <li class="flex gap-3"><i class="fas fa-envelope text-copper mt-1"></i>
+          <a href="mailto:info@gasthaus-zur-silberstrasse.de" class="hover:text-white transition-colors break-all">info@gasthaus-zur-silberstrasse.de</a></li>
       </ul>
-      
-      <a href="tel:+49373699378"
-         class="btn-primary inline-flex mt-8 px-6 py-3 rounded-full font-semibold"><i class="fas fa-phone mr-2"></i>Jetzt anrufen</a>
+    </div>
+    <div class="card fade-up d1 rounded-sm p-9">
+      <h3 class="font-display text-2xl mb-6"><i class="fas fa-location-dot text-silver mr-3"></i>So finden Sie uns</h3>
+      <ul class="space-y-4 text-sm" style="color:var(--muted)">
+        <li class="flex gap-3"><i class="fas fa-map-marker-alt text-copper mt-1"></i>
+          <span>Am Rathaus 1, 09432 Gro&szlig;olbersdorf</span></li>
+        <li class="flex gap-3"><i class="fas fa-mountain text-copper mt-1"></i>
+          <span>Mitten im Erzgebirge &mdash; g&uuml;nstig erreichbar aus Chemnitz, Zschopau und Marienberg</span></li>
+        <li class="flex gap-3"><i class="fab fa-facebook text-copper mt-1"></i>
+          <a href="https://www.facebook.com/pages/Veranstaltungszentrum-Zur-Silberstra%C3%9Fe/230506177081354" target="_blank" rel="noopener" class="hover:text-white transition-colors">Auf Facebook folgen</a></li>
+      </ul>
+      <div class="flex flex-wrap gap-4 mt-8">
+        <a href="tel:+49373699378" class="btn-primary px-6 py-3 rounded-sm inline-flex items-center">
+          <i class="fas fa-phone mr-2 text-xs"></i>Jetzt anrufen</a>
+        <a href="https://maps.google.com/?q=Am+Rathaus+1%2C+09432+Gro%C3%9Folbersdorf" target="_blank" rel="noopener"
+           class="btn-ghost px-6 py-3 rounded-sm font-medium inline-flex items-center">
+          <i class="fas fa-route mr-2 text-xs"></i>Route planen</a>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- FAQ -->
+<section class="max-w-3xl mx-auto px-4 pb-20 md:pb-28">
+  <h2 class="font-display text-4xl text-center mb-12 fade-up">H&auml;ufige Fragen</h2>
 
-<section class="max-w-3xl mx-auto px-4 py-16">
-  <h2 class="text-3xl font-bold text-center mb-10 fade-up">Häufige Fragen</h2>
-  
-  <div class="faq fade-up border-b py-4 cursor-pointer" style="border-color:#eef1f5" onclick="this.classList.toggle('open')">
-    <div class="flex justify-between items-center">
-      <h3 class="font-medium">Kann ich einen Tisch reservieren?</h3>
-      <i class="faq-i fas fa-chevron-down text-accent transition-transform"></i>
+  <div class="faq fade-up border-b border-line py-5 cursor-pointer" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center gap-4">
+      <h3 class="font-medium">F&uuml;r wie viele G&auml;ste haben Sie Platz?</h3>
+      <i class="faq-i fas fa-chevron-down text-silver transition-transform"></i>
     </div>
-    <div class="faq-a"><p class="pt-3 text-sm" style="color:var(--muted)">Sehr gern – rufen Sie uns einfach an, wir halten Ihnen Ihren Wunschtisch bereit.</p></div>
+    <div class="faq-a"><p class="pt-4 text-sm leading-relaxed" style="color:var(--muted)">Im gro&szlig;en Saal bis zu 300 G&auml;ste an Tischen oder 400 bei Reihenbestuhlung. F&uuml;r kleinere Runden gibt es Vereinszimmer, Gaststube, Western-Saloon und Kegelanlage.</p></div>
   </div>
-  
-  <div class="faq fade-up border-b py-4 cursor-pointer" style="border-color:#eef1f5" onclick="this.classList.toggle('open')">
-    <div class="flex justify-between items-center">
-      <h3 class="font-medium">Bieten Sie auch Speisen zum Mitnehmen an?</h3>
-      <i class="faq-i fas fa-chevron-down text-accent transition-transform"></i>
+
+  <div class="faq fade-up border-b border-line py-5 cursor-pointer" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center gap-4">
+      <h3 class="font-medium">Was umfasst das Rundum-Sorglos-Paket?</h3>
+      <i class="faq-i fas fa-chevron-down text-silver transition-transform"></i>
     </div>
-    <div class="faq-a"><p class="pt-3 text-sm" style="color:var(--muted)">Ja, viele unserer Gerichte gibt es auch außer Haus. Bestellen Sie telefonisch vor.</p></div>
+    <div class="faq-a"><p class="pt-4 text-sm leading-relaxed" style="color:var(--muted)">Auf Wunsch alles zum Festpreis: Buffet oder Men&uuml;, Dekoration, Technik und kulturelle Beitr&auml;ge wie Kabarett, Shows, Musik und Tanz &mdash; Sie feiern, wir k&uuml;mmern uns.</p></div>
   </div>
-  
-  <div class="faq fade-up border-b py-4 cursor-pointer" style="border-color:#eef1f5" onclick="this.classList.toggle('open')">
-    <div class="flex justify-between items-center">
-      <h3 class="font-medium">Richten Sie Feiern aus?</h3>
-      <i class="faq-i fas fa-chevron-down text-accent transition-transform"></i>
+
+  <div class="faq fade-up border-b border-line py-5 cursor-pointer" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center gap-4">
+      <h3 class="font-medium">Kann ich die Kegel- oder Bowlingbahn auch einzeln buchen?</h3>
+      <i class="faq-i fas fa-chevron-down text-silver transition-transform"></i>
     </div>
-    <div class="faq-a"><p class="pt-3 text-sm" style="color:var(--muted)">Ob Geburtstag, Familienfeier oder Firmenessen – sprechen Sie uns an, wir planen mit Ihnen.</p></div>
+    <div class="faq-a"><p class="pt-4 text-sm leading-relaxed" style="color:var(--muted)">Ja &mdash; je zwei Kegel- und Bowlingbahnen k&ouml;nnen einzeln oder kombiniert gebucht werden, mit Bewirtung an der eigenen Theke. Rufen Sie uns f&uuml;r Ihren Wunschtermin an.</p></div>
   </div>
-  
+
+  <div class="faq fade-up border-b border-line py-5 cursor-pointer" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center gap-4">
+      <h3 class="font-medium">Bieten Sie Catering au&szlig;er Haus an?</h3>
+      <i class="faq-i fas fa-chevron-down text-silver transition-transform"></i>
+    </div>
+    <div class="faq-a"><p class="pt-4 text-sm leading-relaxed" style="color:var(--muted)">Ja &mdash; inklusive Festzeltvermietung, Schanktechnik, Dekoration und Cocktailbar. Wir betreuen Ihre Veranstaltung auch bei Ihnen vor Ort komplett.</p></div>
+  </div>
 </section>
 
-
 <!-- Footer -->
-<footer class="text-white" style="background:#111827">
-  <div class="max-w-6xl mx-auto px-4 py-12 text-center">
-    <div class="text-xl font-extrabold mb-2">Gasthaus Zur Silberstraße</div>
-    <p class="text-sm mb-6" style="color:#9aa4b2">
-      Am Rathaus 1, 09432 Großolbersdorf · +49 37369 9378
-    </p>
-    <p class="text-xs" style="color:#6b7280">© 2026 Gasthaus Zur Silberstraße · Impressum · Datenschutz</p>
-    <p class="text-xs mt-4" style="color:#6b7280">
-      Design-Vorschlag erstellt von <a class="underline" href="https://www.pexuscode.de/">Pexuscode</a>, 09557 Flöha
+<footer class="border-t border-line" style="background:#0d0b0a">
+  <div class="max-w-6xl mx-auto px-4 py-14 text-center">
+    <p class="text-silver text-2xl mb-3"><i class="fas fa-gem"></i></p>
+    <div class="font-display text-2xl mb-2">Gasthaus &bdquo;Zur Silberstra&szlig;e&ldquo;</div>
+    <p class="text-sm mb-2" style="color:var(--muted)">Am Rathaus 1, 09432 Gro&szlig;olbersdorf · <a href="tel:+49373699378" class="hover:text-white">037369 9378</a></p>
+    <a href="https://www.facebook.com/pages/Veranstaltungszentrum-Zur-Silberstra%C3%9Fe/230506177081354" target="_blank" rel="noopener" class="inline-flex text-silver hover:text-white transition-colors text-lg mb-6" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+    <p class="text-xs" style="color:#57534a">&copy; 2026 Gasthaus &bdquo;Zur Silberstra&szlig;e&ldquo; · Impressum · Datenschutz</p>
+    <p class="text-xs mt-4" style="color:#57534a">
+      Design-Vorschlag erstellt von <a class="underline hover:text-white" href="https://www.pexuscode.de/">Pexuscode</a>, 09557 Fl&ouml;ha
     </p>
   </div>
 </footer>
@@ -286,6 +432,10 @@
   document.querySelectorAll('#mobile-nav a').forEach(function (a) {
     a.addEventListener('click', function () { mnav.classList.add('hidden'); mnav.classList.remove('flex'); });
   });
+  var header = document.getElementById('site-header');
+  window.addEventListener('scroll', function () {
+    header.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
   }, { threshold: 0.12 });
