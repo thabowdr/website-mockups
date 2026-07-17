@@ -6,10 +6,23 @@ Grundstruktur für Online-Reservierung mit Dashboard, kopierbar in jedes Kundenp
 
 | Datei | Zweck |
 |---|---|
-| `store.js` | Gemeinsame Datenschicht (aktuell localStorage, später API) |
+| `store.js` | Gemeinsame Datenschicht (aktuell localStorage, später API) inkl. SMS-Texte und Vorschlags-Logik |
 | `widget.js` | Einbettbares Reservierungsformular für die Kundenseite |
-| `dashboard.html` | Übersicht für den Betreiber: bestätigen, stornieren, No-Show |
-| `index.html` | Demo-Seite mit eingebettetem Widget |
+| `dashboard.html` | Übersicht für den Betreiber: bestätigen, Zeit vorschlagen, stornieren, No-Show – mit SMS-Vorschau |
+| `index.html` | Demo-Seite mit eingebettetem Widget und simuliertem Gast-Handy (SMS-Eingang, Zusage/Ablehnung) |
+
+## Benachrichtigungen & Zeitvorschlag
+
+- Jede Aktion des Wirts (Bestätigen, Stornieren, Zeit vorschlagen) erzeugt den
+  SMS-Text, der im Live-Betrieb an die Gast-Nummer geht. In der Demo wird er
+  nur angezeigt (Dashboard-Toast) und am „Gast-Handy“ auf der Demo-Seite
+  zugestellt.
+- „Zeit vorschlagen“ überschreibt die Reservierung nicht: Status wird
+  `vorschlag`, der Gast bekommt die Alternative per SMS und muss zusagen
+  (Live-Betrieb: Bestätigungs-Link; Demo: Knopf am Gast-Handy). Erst dann
+  springt die Reservierung mit neuer Uhrzeit auf `bestaetigt`.
+- Echter Versand später über einen SMS-Anbieter (z. B. seven.io, Twilio)
+  serverseitig – die Texte kommen fertig aus `ResvStore.smsText()`.
 
 ## Demo testen
 

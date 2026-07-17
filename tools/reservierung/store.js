@@ -2,14 +2,21 @@
  * store.js – gemeinsame Datenschicht für Widget und Dashboard.
  *
  * Aktuell: localStorage (Demo/Prototyp, läuft ohne Server).
- * Später: Die vier Funktionen in ResvStore.backend durch fetch()-Aufrufe
- * gegen eine echte API ersetzen – Widget und Dashboard bleiben unverändert.
+ * Später: Die Funktionen in ResvStore.backend durch fetch()-Aufrufe gegen
+ * eine echte API ersetzen – Widget und Dashboard bleiben unverändert.
+ * Der SMS-Versand (smsText/notify) läuft dann serverseitig über einen
+ * Anbieter wie seven.io oder Twilio; hier wird er nur simuliert und als
+ * Nachrichtenverlauf an der Reservierung gespeichert.
  */
 (function () {
   'use strict';
 
   function key(restaurantId) {
     return 'resv:' + restaurantId;
+  }
+
+  function fmtDate(d) {
+    return d.split('-').reverse().join('.');
   }
 
   const backend = {
@@ -23,33 +30,98 @@
     saveAll(restaurantId, reservations) {
       localStorage.setItem(key(restaurantId), JSON.stringify(reservations));
     },
+    get(restaurantId, id) {
+      return backend.list(restaurantId).find(function (x) { return x.id === id; });
+    },
     create(restaurantId, data) {
       const all = backend.list(restaurantId);
       const resv = Object.assign({
         id: 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
         createdAt: new Date().toISOString(),
-        status: 'neu' // neu | bestaetigt | storniert | noshow
+        status: 'neu', // neu | bestaetigt | vorschlag | storniert | noshow
+        messages: []
       }, data);
       all.push(resv);
       backend.saveAll(restaurantId, all);
       return resv;
     },
-    setStatus(restaurantId, id, status) {
+    update(restaurantId, id, patch) {
       const all = backend.list(restaurantId);
       const r = all.find(function (x) { return x.id === id; });
       if (r) {
-        r.status = status;
+        Object.assign(r, patch);
         backend.saveAll(restaurantId, all);
       }
       return r;
     }
   };
 
+  /* Nachrichtentexte, die im Live-Betrieb als SMS an r.phone gehen würden. */
+  function smsText(restaurantName, r, event) {
+    const when = fmtDate(r.date) + ' um ' + r.time + ' Uhr';
+    switch (event) {
+      case 'bestaetigt':
+        return restaurantName + ': Ihre Reservierung am ' + when + ' für ' +
+          r.guests + ' Person(en) ist bestätigt. Bis bald!';
+      case 'storniert':
+        return restaurantName + ': Ihre Reservierung am ' + when +
+          ' können wir leider nicht anbieten. Bitte melden Sie sich gern für einen anderen Termin.';
+      case 'vorschlag':
+        return restaurantName + ': Um ' + r.time + ' Uhr ist leider kein Tisch frei. ' +
+          'Alternativ hätten wir am ' + fmtDate(r.date) + ' um ' + r.proposedTime +
+          ' Uhr Platz für Sie. Bitte bestätigen Sie über den Link: [Zusage-Link]';
+      default:
+        return '';
+    }
+  }
+
   window.ResvStore = {
     backend: backend,
     list: backend.list,
+    get: backend.get,
     create: backend.create,
-    setStatus: backend.setStatus,
+    smsText: smsText,
+
+    /* Statuswechsel inkl. simulierter SMS; gibt den Nachrichtentext zurück. */
+    setStatus(restaurantId, id, status, restaurantName) {
+      const r = backend.get(restaurantId, id);
+      if (!r) return null;
+      const patch = { status: status };
+      const text = smsText(restaurantName || restaurantId, Object.assign({}, r, patch), status);
+      if (text) {
+        patch.messages = (r.messages || []).concat([{ ts: new Date().toISOString(), text: text }]);
+      }
+      backend.update(restaurantId, id, patch);
+      return text;
+    },
+
+    /* Wirt schlägt eine andere Uhrzeit vor – Gast muss zusagen. */
+    propose(restaurantId, id, newTime, restaurantName) {
+      const r = backend.get(restaurantId, id);
+      if (!r) return null;
+      const next = Object.assign({}, r, { proposedTime: newTime });
+      const text = smsText(restaurantName || restaurantId, next, 'vorschlag');
+      backend.update(restaurantId, id, {
+        status: 'vorschlag',
+        proposedTime: newTime,
+        messages: (r.messages || []).concat([{ ts: new Date().toISOString(), text: text }])
+      });
+      return text;
+    },
+
+    /* Antwort des Gastes auf einen Vorschlag (im Live-Betrieb via Link). */
+    acceptProposal(restaurantId, id) {
+      const r = backend.get(restaurantId, id);
+      if (!r || r.status !== 'vorschlag') return null;
+      return backend.update(restaurantId, id, {
+        time: r.proposedTime, proposedTime: null, status: 'bestaetigt'
+      });
+    },
+    declineProposal(restaurantId, id) {
+      const r = backend.get(restaurantId, id);
+      if (!r || r.status !== 'vorschlag') return null;
+      return backend.update(restaurantId, id, { proposedTime: null, status: 'storniert' });
+    },
 
     /* Demo-Daten einspielen, falls noch keine Reservierungen existieren. */
     seedDemo(restaurantId) {

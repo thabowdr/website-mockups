@@ -11,8 +11,17 @@
          display: grid; place-items: center; padding: 2rem; box-sizing: border-box; }
   .wrap { max-width: 480px; width: 100%; }
   h1 { font-size: 1.3rem; }
+  h2 { font-size: .8rem; letter-spacing: .15em; text-transform: uppercase; color: #a49c90; margin: 2rem 0 .5rem; }
   p { color: #a49c90; font-size: .9rem; line-height: 1.5; }
   a { color: #c08a4e; }
+  .sms { background: #232a33; border: 1px solid rgba(122,167,217,.4); border-radius: 12px;
+         padding: .8rem 1rem; margin-bottom: .6rem; font-size: .85rem; line-height: 1.5; }
+  .sms .from { font-size: .7rem; color: #7aa7d9; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .3rem; }
+  .sms .reply { margin-top: .6rem; display: flex; gap: .5rem; }
+  .sms button { background: transparent; border: 1px solid rgba(255,255,255,.2); color: #f0ebe3;
+                border-radius: 6px; padding: .35rem .8rem; cursor: pointer; font: inherit; font-size: .8rem; }
+  .sms button:hover { border-color: #c08a4e; color: #c08a4e; }
+  .sms-empty { color: #6b7178; font-size: .85rem; }
 </style>
 </head>
 <body>
@@ -22,8 +31,58 @@
      Eine abgeschickte Reservierung erscheint sofort im
      <a href="dashboard.html?r=demo">Dashboard</a> (gern in einem zweiten Tab öffnen).</p>
   <div id="resv-widget" data-restaurant="demo"></div>
+
+  <h2>Gast-Handy (Simulation)</h2>
+  <p>Hier landen die SMS, die im Live-Betrieb an die angegebene Nummer gehen würden –
+     inklusive Zusage bei einem Zeitvorschlag des Wirts.</p>
+  <div id="inbox"><div class="sms-empty">Noch keine Nachrichten.</div></div>
 </div>
 <script src="store.js"></script>
 <script src="widget.js"></script>
+<script>
+(function () {
+  'use strict';
+  const restaurantId = 'demo';
+
+  function renderInbox() {
+    const all = ResvStore.list(restaurantId);
+    const items = [];
+    all.forEach(function (r) {
+      (r.messages || []).forEach(function (m) {
+        items.push({ ts: m.ts, text: m.text, resv: r });
+      });
+    });
+    items.sort(function (a, b) { return b.ts.localeCompare(a.ts); });
+    const inbox = document.getElementById('inbox');
+    if (!items.length) {
+      inbox.innerHTML = '<div class="sms-empty">Noch keine Nachrichten.</div>';
+      return;
+    }
+    inbox.innerHTML = items.map(function (m) {
+      const t = new Date(m.ts).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+      const reply = (m.resv.status === 'vorschlag' && m.text.indexOf('[Zusage-Link]') !== -1)
+        ? `<div class="reply">
+             <button data-reply="accept" data-id="${m.resv.id}">Zusagen</button>
+             <button data-reply="decline" data-id="${m.resv.id}">Ablehnen</button>
+           </div>` : '';
+      return `<div class="sms">
+        <div class="from">SMS an ${m.resv.phone} · ${t} Uhr</div>
+        ${m.text}${reply}
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('inbox').addEventListener('click', function (e) {
+    const btn = e.target.closest('button[data-reply]');
+    if (!btn) return;
+    if (btn.dataset.reply === 'accept') ResvStore.acceptProposal(restaurantId, btn.dataset.id);
+    else ResvStore.declineProposal(restaurantId, btn.dataset.id);
+    renderInbox();
+  });
+
+  window.addEventListener('storage', renderInbox);
+  renderInbox();
+})();
+</script>
 </body>
 </html>

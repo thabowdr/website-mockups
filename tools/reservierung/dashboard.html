@@ -8,7 +8,7 @@
 <style>
   :root { --bg: #14161a; --panel: #1c1f24; --line: rgba(255,255,255,.09);
           --accent: #c08a4e; --text: #eef0f2; --muted: #99a0a8;
-          --ok: #6fbf8a; --warn: #e0b25a; --bad: #d97a6f; }
+          --ok: #6fbf8a; --warn: #e0b25a; --bad: #d97a6f; --info: #7aa7d9; }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--text);
          font-family: system-ui, sans-serif; }
@@ -21,7 +21,7 @@
            gap: .75rem; margin-bottom: 1.5rem; }
   .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
           padding: 1rem; }
-  .stat .num { font-size: 1.6rem; font-weight: 600; }
+  .stat .num { font-size: 1.6rem; font-weight: 600; font-variant-numeric: tabular-nums; }
   .stat .lbl { color: var(--muted); font-size: .75rem; margin-top: .25rem; }
   .tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
   .tabs button { background: var(--panel); color: var(--muted); border: 1px solid var(--line);
@@ -32,6 +32,7 @@
           display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
   .card.neu { border-left: 3px solid var(--warn); }
   .card.bestaetigt { border-left: 3px solid var(--ok); }
+  .card.vorschlag { border-left: 3px solid var(--info); }
   .card.storniert, .card.noshow { border-left: 3px solid var(--bad); opacity: .55; }
   .who { font-weight: 600; }
   .meta { color: var(--muted); font-size: .85rem; margin-top: .15rem; }
@@ -39,12 +40,26 @@
            letter-spacing: .05em; }
   .badge.neu { background: rgba(224,178,90,.15); color: var(--warn); }
   .badge.bestaetigt { background: rgba(111,191,138,.15); color: var(--ok); }
+  .badge.vorschlag { background: rgba(122,167,217,.15); color: var(--info); }
   .badge.storniert, .badge.noshow { background: rgba(217,122,111,.15); color: var(--bad); }
-  .actions { display: flex; gap: .4rem; }
-  .actions button { background: transparent; border: 1px solid var(--line); color: var(--text);
-                    border-radius: 6px; padding: .35rem .7rem; cursor: pointer; font-size: .8rem; }
+  .actions { display: flex; gap: .4rem; flex-wrap: wrap; }
+  .actions button, .actions select { background: transparent; border: 1px solid var(--line); color: var(--text);
+                    border-radius: 6px; padding: .35rem .7rem; cursor: pointer; font: inherit; font-size: .8rem; }
   .actions button:hover { border-color: var(--accent); color: var(--accent); }
+  .actions select { background: var(--panel); }
   .empty { color: var(--muted); text-align: center; padding: 3rem 0; }
+
+  /* Simulierte SMS-Vorschau */
+  #toast { position: fixed; left: 50%; bottom: 1.25rem; transform: translateX(-50%);
+           max-width: 420px; width: calc(100% - 2rem); background: #232a33;
+           border: 1px solid var(--info); border-radius: 12px; padding: .9rem 1.1rem;
+           box-shadow: 0 16px 48px rgba(0,0,0,.5); display: none; }
+  #toast.show { display: block; }
+  #toast .to { font-size: .72rem; color: var(--info); text-transform: uppercase;
+               letter-spacing: .08em; margin-bottom: .4rem; }
+  #toast .txt { font-size: .88rem; line-height: 1.5; }
+  #toast button { float: right; background: transparent; border: 0; color: var(--muted);
+                  cursor: pointer; font-size: .9rem; padding: 0 0 0 .5rem; }
 </style>
 </head>
 <body>
@@ -69,12 +84,18 @@
   </div>
   <div id="list"></div>
 </main>
+<div id="toast" role="status">
+  <button type="button" aria-label="Schließen">×</button>
+  <div class="to" id="toast-to"></div>
+  <div class="txt" id="toast-txt"></div>
+</div>
 <script src="store.js"></script>
 <script>
 (function () {
   'use strict';
   const params = new URLSearchParams(location.search);
   const restaurantId = params.get('r') || 'demo';
+  const restaurantName = params.get('name') || restaurantId;
   ResvStore.seedDemo(restaurantId);
 
   document.getElementById('subtitle').textContent = 'Betrieb: ' + restaurantId;
@@ -82,14 +103,33 @@
     new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
 
   let tab = 'heute';
+  let proposing = null; // Reservierungs-ID, für die gerade eine Zeit gewählt wird
   const today = new Date().toISOString().slice(0, 10);
 
   function inDays(dateStr, n) {
     const diff = (new Date(dateStr) - new Date(today)) / 86400000;
     return diff >= 0 && diff < n;
   }
-
   function fmtDate(d) { return d.split('-').reverse().join('.'); }
+  function timeOptions(except) {
+    const out = [];
+    for (let h = 11; h <= 21; h++) {
+      ['00', '30'].forEach(function (m) {
+        const t = h + ':' + m;
+        if (t !== except) out.push('<option>' + t + '</option>');
+      });
+    }
+    return out.join('');
+  }
+
+  function showSms(phone, text) {
+    document.getElementById('toast-to').textContent = 'SMS an ' + phone + ' (Simulation)';
+    document.getElementById('toast-txt').textContent = text;
+    document.getElementById('toast').classList.add('show');
+  }
+  document.querySelector('#toast button').addEventListener('click', function () {
+    document.getElementById('toast').classList.remove('show');
+  });
 
   function render() {
     const all = ResvStore.list(restaurantId)
@@ -116,18 +156,30 @@
     }
     list.innerHTML = rows.map(function (r) {
       const canAct = r.status === 'neu' || r.status === 'bestaetigt';
+      let actions = '';
+      if (proposing === r.id) {
+        actions = `
+          <select id="prop-time">${timeOptions(r.time)}</select>
+          <button data-act="propose-send" data-id="${r.id}">Vorschlag senden</button>
+          <button data-act="propose-cancel">Abbrechen</button>`;
+      } else {
+        actions = [
+          r.status === 'neu' ? `<button data-act="bestaetigt" data-id="${r.id}">Bestätigen</button>` : '',
+          r.status === 'neu' ? `<button data-act="propose" data-id="${r.id}">Zeit vorschlagen</button>` : '',
+          canAct ? `<button data-act="storniert" data-id="${r.id}">Stornieren</button>` : '',
+          r.status === 'bestaetigt' && r.date <= today ? `<button data-act="noshow" data-id="${r.id}">No-Show</button>` : ''
+        ].join('');
+      }
+      const proposedNote = r.status === 'vorschlag' && r.proposedTime
+        ? ' · Vorschlag: ' + r.proposedTime + ' Uhr (wartet auf Zusage)' : '';
       return `
       <div class="card ${r.status}">
         <div>
           <div class="who">${r.name} · ${r.guests} Pers.</div>
-          <div class="meta">${fmtDate(r.date)} um ${r.time} Uhr · ${r.phone}${r.note ? ' · „' + r.note + '“' : ''}</div>
+          <div class="meta">${fmtDate(r.date)} um ${r.time} Uhr · ${r.phone}${r.note ? ' · „' + r.note + '“' : ''}${proposedNote}</div>
         </div>
         <span class="badge ${r.status}">${r.status}</span>
-        <div class="actions">
-          ${r.status === 'neu' ? `<button data-act="bestaetigt" data-id="${r.id}">Bestätigen</button>` : ''}
-          ${canAct ? `<button data-act="storniert" data-id="${r.id}">Stornieren</button>` : ''}
-          ${r.status === 'bestaetigt' && r.date <= today ? `<button data-act="noshow" data-id="${r.id}">No-Show</button>` : ''}
-        </div>
+        <div class="actions">${actions}</div>
       </div>`;
     }).join('');
   }
@@ -135,7 +187,23 @@
   document.getElementById('list').addEventListener('click', function (e) {
     const btn = e.target.closest('button[data-act]');
     if (!btn) return;
-    ResvStore.setStatus(restaurantId, btn.dataset.id, btn.dataset.act);
+    const act = btn.dataset.act;
+    const id = btn.dataset.id;
+    if (act === 'propose') {
+      proposing = id;
+    } else if (act === 'propose-cancel') {
+      proposing = null;
+    } else if (act === 'propose-send') {
+      const time = document.getElementById('prop-time').value;
+      const text = ResvStore.propose(restaurantId, id, time, restaurantName);
+      proposing = null;
+      const r = ResvStore.get(restaurantId, id);
+      if (text && r) showSms(r.phone, text);
+    } else {
+      const text = ResvStore.setStatus(restaurantId, id, act, restaurantName);
+      const r = ResvStore.get(restaurantId, id);
+      if (text && r && (act === 'bestaetigt' || act === 'storniert')) showSms(r.phone, text);
+    }
     render();
   });
 
@@ -149,7 +217,7 @@
     render();
   });
 
-  /* Neue Reservierungen aus dem Widget (anderer Tab) live übernehmen. */
+  /* Änderungen aus anderen Tabs (Widget, Gast-Zusage) live übernehmen. */
   window.addEventListener('storage', render);
 
   render();
