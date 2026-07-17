@@ -1,282 +1,290 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Teichhaus – Frische Küche und herzliche Gastfreundschaft</title>
-<meta name="description" content="Teichhaus – Frische Küche und herzliche Gastfreundschaft">
+<title>Teichhaus – Ausflugsgaststätte</title>
+<meta name="description" content="Teichhaus – frisch zubereitet, herzlich serviert.">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --accent: #c0392b;
-    --accent2: #e67e22;
-    --tint: #fdf0ec;
-    --ink: #1f2733;
-    --muted: #5b6572;
+    --bg: #141312;
+    --panel: #1d1b19;
+    --line: rgba(255,255,255,.08);
+    --accent: #8fa66f;
+    --accent2: #d8c8a8;
+    --text: #f0ebe3;
+    --muted: #a49c90;
   }
   html { scroll-behavior: smooth; }
-  html, body { overflow-x: hidden; max-width: 100%; }
-  body { color: var(--ink); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+  html, body { overflow-x: hidden; max-width: 100%; background: var(--bg); }
+  body { color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-weight: 300; }
   img { max-width: 100%; }
+  [id] { scroll-margin-top: 96px; }
+
+  .font-display { font-family: 'Playfair Display', serif; }
   .text-accent { color: var(--accent); }
-  .bg-accent { background: var(--accent); }
-  .bg-tint { background: var(--tint); }
-  .border-accent { border-color: var(--accent); }
-  [id] { scroll-margin-top: 90px; }
-  .gradient-accent {
-    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
-    background-size: 300% 100%;
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    animation: slide 8s linear infinite;
+  .text-accent2 { color: var(--accent2); }
+  .border-line { border-color: var(--line); }
+
+  .label {
+    font-size: .7rem; letter-spacing: .35em; text-transform: uppercase;
+    color: var(--accent2); font-weight: 500;
   }
-  @keyframes slide { to { background-position: 300% 0; } }
-  .hero-img { animation: float 7s ease-in-out infinite alternate; }
-  @keyframes float { from { transform: translateY(-8px);} to { transform: translateY(8px);} }
-  .fade-up { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
-  .fade-up.show { opacity: 1; transform: none; }
-  .card { transition: transform .3s ease, box-shadow .3s ease; }
-  .card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,.10); }
-  .gal img { transition: transform .5s ease; }
+  .hairline { width: 56px; height: 1px; background: var(--accent2); opacity: .5; }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(20,19,18,.58) 0%, rgba(20,19,18,.74) 55%, var(--bg) 100%),
+      url('https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=2000&q=75') center/cover no-repeat;
+  }
+
+  .btn-primary {
+    background: var(--accent); color: #141810; font-weight: 500;
+    transition: filter .2s ease, transform .2s ease;
+    box-shadow: 0 8px 28px rgba(0,0,0,.35);
+  }
+  .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+  .btn-ghost {
+    border: 1px solid var(--line); border-color: rgba(255,255,255,.25); color: var(--text);
+    transition: all .25s ease;
+  }
+  .btn-ghost:hover { background: var(--accent2); border-color: var(--accent2); color: #14161a; }
+
+  .card { background: var(--panel); border: 1px solid var(--line); transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+  .card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,.22); box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+
+  .tag-badge { background: rgba(255,255,255,.06); border: 1px solid var(--line); color: var(--accent2); }
+
+  .gal { position: relative; overflow: hidden; border-radius: .375rem; }
+  .gal img { transition: transform .6s ease; display: block; }
   .gal:hover img { transform: scale(1.06); }
-  .faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+  .gal::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(20,19,18,.55));
+    opacity: 0; transition: opacity .4s ease; pointer-events: none;
+  }
+  .gal:hover::after { opacity: 1; }
+
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
   .faq.open .faq-a { max-height: 320px; }
   .faq.open .faq-i { transform: rotate(180deg); }
-  .btn-primary { background: var(--accent); color:#fff; transition: filter .2s ease, transform .2s ease; }
-  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-2px); }
-  .btn-ghost { border:1px solid var(--accent); color: var(--accent); transition: all .2s ease; }
-  .btn-ghost:hover { background: var(--accent); color:#fff; }
+
+  .fade-up { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s ease; }
+  .fade-up.show { opacity: 1; transform: none; }
+  .d1 { transition-delay: .1s; } .d2 { transition-delay: .2s; }
+
+  #site-header { background: rgba(20,19,18,.35); backdrop-filter: blur(12px); transition: background .3s ease, border-color .3s ease; border-bottom: 1px solid transparent; }
+  #site-header.scrolled { background: rgba(20,19,18,.93); border-bottom-color: var(--line); }
+
   @media (prefers-reduced-motion: reduce) {
-    .gradient-accent, .hero-img { animation: none; }
-    .fade-up { opacity:1; transform:none; transition:none; }
+    .fade-up { opacity: 1; transform: none; transition: none; }
+    .card, .gal img { transition: none; }
   }
 </style>
 </head>
-<body class="bg-white">
+<body>
 
 <!-- Hinweis-Banner -->
-<div class="text-white text-center text-xs sm:text-sm py-2 px-4" style="background:#111827">
+<div class="text-center text-xs sm:text-sm py-2 px-4" style="background:#0c0b0a; color:#8b8578">
   Unverbindlicher Design-Vorschlag von Pexuscode ·
-  <a class="underline" href="tel:+4916095530838">+49 160 95530838</a> ·
-  <a class="underline" href="mailto:pexuscodede@gmail.com">pexuscodede@gmail.com</a>
+  <a class="underline hover:text-white" href="tel:+4916095530838">+49 160 95530838</a> ·
+  <a class="underline hover:text-white" href="mailto:pexuscodede@gmail.com">pexuscodede@gmail.com</a>
 </div>
 
 <!-- Header -->
-<header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b" style="border-color:#eef1f5">
-  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-    <a href="#top" class="flex items-center gap-2 font-extrabold text-lg tracking-tight">
-      <span class="inline-flex w-9 h-9 rounded-lg items-center justify-center text-white bg-accent">
-        <i class="fas fa-utensils"></i>
-      </span>
-      <span>Teichhaus</span>
+<header id="site-header" class="sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-3">
+      <span class="text-accent2 text-xl"><i class="fas fa-tree"></i></span>
+      <span class="font-display text-lg md:text-xl tracking-wide leading-tight">Teichhaus</span>
     </a>
-    <nav class="hidden md:flex items-center gap-7 text-sm font-medium">
-      <a href="#leistungen" class="hover:text-accent">Das erwartet Sie</a>
-      <a href="#galerie" class="hover:text-accent">Galerie</a>
-      <a href="#ueber" class="hover:text-accent">Über uns</a>
-      <a href="#kontakt" class="hover:text-accent">Kontakt</a>
+    <nav class="hidden md:flex items-center gap-7 text-sm" style="color:var(--muted)">
+      <a href="#angebot" class="hover:text-white transition-colors">Angebot</a>
+      <a href="#galerie" class="hover:text-white transition-colors">Galerie</a>
+      <a href="#ueber" class="hover:text-white transition-colors">&Uuml;ber uns</a>
+      <a href="#kontakt" class="hover:text-white transition-colors">Kontakt</a>
     </nav>
     <div class="flex items-center gap-3">
-      <a href="tel:+4916095530838"
-         class="hidden sm:inline-flex btn-primary px-4 py-2 rounded-full text-sm font-semibold">
-        <i class="fas fa-phone mr-2"></i>Anrufen
+      <a href="tel:+4916095530838" class="hidden sm:inline-flex btn-primary px-5 py-2.5 rounded-sm text-sm items-center">
+        <i class="fas fa-phone mr-2 text-xs"></i>016095530838
       </a>
-      <button id="burger" class="md:hidden text-2xl" aria-label="Menü"><i class="fas fa-bars"></i></button>
+      <button id="burger" class="md:hidden text-2xl text-accent2" aria-label="Menü öffnen"><i class="fas fa-bars"></i></button>
     </div>
   </div>
-  <nav id="mobile-nav" class="hidden md:hidden px-4 pb-4 flex-col gap-3 text-sm font-medium bg-white border-b" style="border-color:#eef1f5">
-    <a href="#leistungen" class="block py-1">Das erwartet Sie</a>
+  <nav id="mobile-nav" class="hidden md:hidden px-4 pb-5 flex-col gap-4 text-sm" style="background:rgba(20,19,18,.97); color:var(--muted)">
+    <a href="#angebot" class="block py-1">Angebot</a>
     <a href="#galerie" class="block py-1">Galerie</a>
-    <a href="#ueber" class="block py-1">Über uns</a>
+    <a href="#ueber" class="block py-1">&Uuml;ber uns</a>
     <a href="#kontakt" class="block py-1">Kontakt</a>
+    <a href="tel:+4916095530838" class="btn-primary inline-flex self-start px-5 py-2.5 rounded-sm mt-1"><i class="fas fa-phone mr-2 text-xs"></i>Anrufen</a>
   </nav>
 </header>
 
 <!-- Hero -->
-<section id="top" class="bg-tint">
-  <div class="max-w-6xl mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
-    <div class="fade-up">
-      <span class="inline-block text-xs font-semibold uppercase tracking-wider text-accent mb-4">
-        Restaurant &amp; Küche
-      </span>
-      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">
-        Genuss mit <span class="gradient-accent">Herz</span> und Gastfreundschaft
+<section id="top" class="relative -mt-[76px]">
+  <div class="hero-bg"></div>
+  <div class="relative max-w-6xl mx-auto px-4 pt-44 pb-28 md:pt-56 md:pb-40">
+    <div class="max-w-2xl fade-up show">
+      <p class="label mb-5">Restaurant &amp; Küche</p>
+      <h1 class="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.08] mb-6">
+        Einkehren, durchatmen,<br>
+        <span class="italic text-accent2">genie&szlig;en.</span>
       </h1>
-      <p class="text-lg mb-8" style="color:var(--muted)">Frische Küche und herzliche Gastfreundschaft.</p>
-      <div class="flex flex-wrap gap-3">
-        <a href="#kontakt" class="btn-primary px-6 py-3 rounded-full font-semibold">Termin anfragen</a>
-        <a href="#leistungen" class="btn-ghost px-6 py-3 rounded-full font-semibold">Leistungen ansehen</a>
+      <p class="text-lg md:text-xl mb-10 max-w-xl" style="color:var(--muted)">Frische Küche und herzliche Gastfreundschaft.</p>
+      <div class="flex flex-wrap gap-4">
+        <a href="tel:+4916095530838" class="btn-primary px-8 py-3.5 rounded-sm">Tisch reservieren</a>
+        <a href="#angebot" class="btn-ghost px-8 py-3.5 rounded-sm font-medium">Unser Angebot</a>
       </div>
-    </div>
-    <div class="fade-up">
-      <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Teichhaus" loading="lazy"
-           class="hero-img rounded-2xl shadow-2xl w-full h-72 md:h-96 object-cover">
     </div>
   </div>
 </section>
 
-<!-- Leistungen -->
-<section id="leistungen" class="max-w-6xl mx-auto px-4 py-16">
-  <div class="text-center mb-12 fade-up">
-    <h2 class="text-3xl font-bold mb-3">Das erwartet Sie</h2>
-    <p class="max-w-2xl mx-auto" style="color:var(--muted)">Ehrliche Küche, gemütliches Ambiente und ein Team, das gern für Sie da ist.</p>
+<!-- Angebot -->
+<section id="angebot" class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+  <div class="text-center mb-14 fade-up">
+    <p class="label mb-4">01 &mdash; Unser Angebot</p>
+    <h2 class="font-display text-4xl md:text-5xl mb-4">Das erwartet Sie</h2>
+    <div class="hairline mx-auto"></div>
   </div>
   <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    
-    <div class="card fade-up bg-white rounded-2xl p-7 border" style="border-color:#eef1f5">
-      <div class="w-12 h-12 rounded-xl bg-tint flex items-center justify-center text-accent text-xl mb-4">
-        <i class="fas fa-utensils"></i>
+      <div class="card fade-up rounded-sm p-8">
+        <i class="fas fa-utensils text-accent2 text-2xl mb-4"></i>
+        <h3 class="font-display text-2xl mb-2">Frische Küche</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--muted)">Saisonale Gerichte aus regionalen Zutaten – täglich frisch für Sie zubereitet.</p>
       </div>
-      <h3 class="text-lg font-semibold mb-2">Frische Küche</h3>
-      <p style="color:var(--muted)">Saisonale Gerichte aus regionalen Zutaten – täglich frisch für Sie zubereitet.</p>
-    </div>
-    
-    <div class="card fade-up bg-white rounded-2xl p-7 border" style="border-color:#eef1f5">
-      <div class="w-12 h-12 rounded-xl bg-tint flex items-center justify-center text-accent text-xl mb-4">
-        <i class="fas fa-champagne-glasses"></i>
+      <div class="card fade-up d1 rounded-sm p-8">
+        <i class="fas fa-champagne-glasses text-accent2 text-2xl mb-4"></i>
+        <h3 class="font-display text-2xl mb-2">Feiern &amp; Events</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--muted)">Ob Familienfeier oder Firmenessen – wir richten Ihre Veranstaltung gern aus.</p>
       </div>
-      <h3 class="text-lg font-semibold mb-2">Feiern &amp; Events</h3>
-      <p style="color:var(--muted)">Ob Familienfeier oder Firmenessen – wir richten Ihre Veranstaltung gern aus.</p>
-    </div>
-    
-    <div class="card fade-up bg-white rounded-2xl p-7 border" style="border-color:#eef1f5">
-      <div class="w-12 h-12 rounded-xl bg-tint flex items-center justify-center text-accent text-xl mb-4">
-        <i class="fas fa-bag-shopping"></i>
+      <div class="card fade-up d2 rounded-sm p-8">
+        <i class="fas fa-bag-shopping text-accent2 text-2xl mb-4"></i>
+        <h3 class="font-display text-2xl mb-2">Außer Haus</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--muted)">Ihre Lieblingsgerichte zum Mitnehmen – einfach vorbestellen und abholen.</p>
       </div>
-      <h3 class="text-lg font-semibold mb-2">Außer Haus</h3>
-      <p style="color:var(--muted)">Ihre Lieblingsgerichte zum Mitnehmen – einfach vorbestellen und abholen.</p>
-    </div>
-    
   </div>
 </section>
 
 <!-- Galerie -->
-<section id="galerie" class="bg-tint">
-  <div class="max-w-6xl mx-auto px-4 py-16">
-    <div class="text-center mb-12 fade-up">
-      <h2 class="text-3xl font-bold mb-3">Einblicke</h2>
-      <p class="max-w-2xl mx-auto" style="color:var(--muted)">Ein Eindruck von Teichhaus.</p>
+<section id="galerie" class="border-t border-b border-line" style="background:var(--panel)">
+  <div class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+    <div class="text-center mb-14 fade-up">
+      <p class="label mb-4">02 &mdash; Einblicke</p>
+      <h2 class="font-display text-4xl md:text-5xl mb-4">Ein Eindruck von uns</h2>
+      <div class="hairline mx-auto"></div>
     </div>
-    <div class="grid sm:grid-cols-3 gap-5">
-      
-      <div class="gal fade-up rounded-2xl overflow-hidden shadow-md">
-        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Teichhaus – Eindruck 1" loading="lazy"
-             class="w-full h-56 object-cover">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[160px] md:auto-rows-[200px]">
+      <div class="gal fade-up col-span-2 row-span-2">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=70" alt="Teichhaus – Einblick 1" loading="lazy" class="w-full h-full object-cover">
       </div>
-      
-      <div class="gal fade-up rounded-2xl overflow-hidden shadow-md">
-        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Teichhaus – Eindruck 2" loading="lazy"
-             class="w-full h-56 object-cover">
+      <div class="gal fade-up d1">
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=700&q=70" alt="Teichhaus – Einblick 2" loading="lazy" class="w-full h-full object-cover">
       </div>
-      
-      <div class="gal fade-up rounded-2xl overflow-hidden shadow-md">
-        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Teichhaus – Eindruck 3" loading="lazy"
-             class="w-full h-56 object-cover">
+      <div class="gal fade-up d1">
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=700&q=70" alt="Teichhaus – Einblick 3" loading="lazy" class="w-full h-full object-cover">
       </div>
-      
+      <div class="gal fade-up d2">
+        <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=700&q=70" alt="Teichhaus – Einblick 4" loading="lazy" class="w-full h-full object-cover">
+      </div>
+      <div class="gal fade-up d2">
+        <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=700&q=70" alt="Teichhaus – Einblick 5" loading="lazy" class="w-full h-full object-cover">
+      </div>
     </div>
   </div>
 </section>
 
 <!-- Über uns -->
-<section id="ueber" class="max-w-4xl mx-auto px-4 py-16 text-center fade-up">
-  <h2 class="text-3xl font-bold mb-5">Über uns</h2>
-  <p class="text-lg leading-relaxed" style="color:var(--muted)">Bei uns treffen ehrliche Küche und herzliche Gastfreundschaft aufeinander. Wir freuen uns darauf, Sie zu verwöhnen – ob zum Mittagstisch, Familienessen oder gemütlichen Abend.</p>
-  
-  
+<section id="ueber" class="max-w-4xl mx-auto px-4 py-20 md:py-28 text-center">
+  <div class="fade-up">
+    <p class="label mb-4">03 &mdash; &Uuml;ber uns</p>
+    <h2 class="font-display text-4xl md:text-5xl mb-4">Herzlich willkommen</h2>
+    <div class="hairline mx-auto mb-7"></div>
+    <p class="text-lg leading-relaxed" style="color:var(--muted)">Bei uns treffen ehrliche Küche und herzliche Gastfreundschaft aufeinander. Wir freuen uns darauf, Sie zu verwöhnen – ob zum Mittagstisch, Familienessen oder gemütlichen Abend.</p>
+  </div>
 </section>
 
-<!-- Öffnungszeiten + Kontakt -->
-<section id="kontakt" class="bg-tint">
-  <div class="max-w-6xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-8">
-    <div class="fade-up bg-white rounded-2xl p-8 border" style="border-color:#eef1f5">
-      <h3 class="text-xl font-semibold mb-6"><i class="fas fa-clock text-accent mr-2"></i>Öffnungszeiten</h3>
-      
-      <table class="w-full text-sm">
-        
-        <tr class="border-b last:border-0" style="border-color:#eef1f5">
-          <td class="py-2 font-medium">Sonntag–Freitag</td>
-          <td class="py-2 text-right" style="color:var(--muted)">11:00-22:00,  Sa 11:00-01:00</td>
-        </tr>
-        
-      </table>
-      
+<!-- Kontakt -->
+<section id="kontakt" class="border-t border-line" style="background:var(--panel)">
+  <div class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+    <div class="text-center mb-14 fade-up">
+      <p class="label mb-4">04 &mdash; Besuchen Sie uns</p>
+      <h2 class="font-display text-4xl md:text-5xl mb-4">&Ouml;ffnungszeiten &amp; Kontakt</h2>
+      <div class="hairline mx-auto"></div>
     </div>
-    <div class="fade-up bg-white rounded-2xl p-8 border" style="border-color:#eef1f5">
-      <h3 class="text-xl font-semibold mb-6"><i class="fas fa-location-dot text-accent mr-2"></i>Kontakt</h3>
-      <ul class="space-y-4 text-sm">
-        <li class="flex gap-3"><i class="fas fa-map-marker-alt text-accent mt-1"></i>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="card fade-up rounded-sm p-9" style="background:var(--bg)">
+        <h3 class="font-display text-2xl mb-6"><i class="far fa-clock text-accent2 mr-3"></i>&Ouml;ffnungszeiten</h3>
+      <table class="w-full text-sm">
+        <tr>
+          <td class="py-3 font-medium">Sonntag–Freitag</td>
+          <td class="py-3 text-right" style="color:var(--muted)">11:00-22:00,  Sa 11:00-01:00</td>
+        </tr>
+      </table>
+      </div>
+      <div class="card fade-up d1 rounded-sm p-9" style="background:var(--bg)">
+        <h3 class="font-display text-2xl mb-6"><i class="fas fa-location-dot text-accent2 mr-3"></i>Kontakt</h3>
+        <ul class="space-y-4 text-sm" style="color:var(--muted)">
+          <li class="flex gap-3"><i class="fas fa-map-marker-alt text-accent2 mt-1"></i>
           <span>Winkel 7</span></li>
-        
-        
-      </ul>
-      
-      <a href="tel:+4916095530838"
-         class="btn-primary inline-flex mt-8 px-6 py-3 rounded-full font-semibold"><i class="fas fa-phone mr-2"></i>Jetzt anrufen</a>
+          <li class="flex gap-3"><i class="fas fa-phone text-accent2 mt-1"></i>
+            <a href="tel:+4916095530838" class="hover:text-white transition-colors">016095530838</a></li>
+        </ul>
+        <div class="flex flex-wrap gap-4 mt-8">
+          <a href="tel:+4916095530838" class="btn-primary px-6 py-3 rounded-sm inline-flex items-center">
+            <i class="fas fa-phone mr-2 text-xs"></i>Jetzt anrufen</a>
+        <a href="https://maps.google.com/?q=Winkel%207" target="_blank" rel="noopener"
+           class="btn-ghost px-6 py-3 rounded-sm font-medium inline-flex items-center">
+          <i class="fas fa-route mr-2 text-xs"></i>Route planen</a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
 
 <!-- FAQ -->
+<section class="max-w-3xl mx-auto px-4 pb-20 md:pb-28">
+  <h2 class="font-display text-4xl text-center mb-12 fade-up">H&auml;ufige Fragen</h2>
 
-<section class="max-w-3xl mx-auto px-4 py-16">
-  <h2 class="text-3xl font-bold text-center mb-10 fade-up">Häufige Fragen</h2>
-  
-  <div class="faq fade-up border-b py-4 cursor-pointer" style="border-color:#eef1f5" onclick="this.classList.toggle('open')">
-    <div class="flex justify-between items-center">
+  <div class="faq fade-up border-b border-line py-5 cursor-pointer" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center gap-4">
       <h3 class="font-medium">Kann ich einen Tisch reservieren?</h3>
-      <i class="faq-i fas fa-chevron-down text-accent transition-transform"></i>
+      <i class="faq-i fas fa-chevron-down text-accent2 transition-transform"></i>
     </div>
-    <div class="faq-a"><p class="pt-3 text-sm" style="color:var(--muted)">Sehr gern – rufen Sie uns einfach an, wir halten Ihnen Ihren Wunschtisch bereit.</p></div>
+    <div class="faq-a"><p class="pt-4 text-sm leading-relaxed" style="color:var(--muted)">Sehr gern – rufen Sie uns einfach an, wir halten Ihnen Ihren Wunschtisch bereit.</p></div>
   </div>
-  
-  <div class="faq fade-up border-b py-4 cursor-pointer" style="border-color:#eef1f5" onclick="this.classList.toggle('open')">
-    <div class="flex justify-between items-center">
+  <div class="faq fade-up border-b border-line py-5 cursor-pointer" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center gap-4">
       <h3 class="font-medium">Bieten Sie auch Speisen zum Mitnehmen an?</h3>
-      <i class="faq-i fas fa-chevron-down text-accent transition-transform"></i>
+      <i class="faq-i fas fa-chevron-down text-accent2 transition-transform"></i>
     </div>
-    <div class="faq-a"><p class="pt-3 text-sm" style="color:var(--muted)">Ja, viele unserer Gerichte gibt es auch außer Haus. Bestellen Sie telefonisch vor.</p></div>
+    <div class="faq-a"><p class="pt-4 text-sm leading-relaxed" style="color:var(--muted)">Ja, viele unserer Gerichte gibt es auch außer Haus. Bestellen Sie telefonisch vor.</p></div>
   </div>
-  
-  <div class="faq fade-up border-b py-4 cursor-pointer" style="border-color:#eef1f5" onclick="this.classList.toggle('open')">
-    <div class="flex justify-between items-center">
+  <div class="faq fade-up border-b border-line py-5 cursor-pointer" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center gap-4">
       <h3 class="font-medium">Richten Sie Feiern aus?</h3>
-      <i class="faq-i fas fa-chevron-down text-accent transition-transform"></i>
+      <i class="faq-i fas fa-chevron-down text-accent2 transition-transform"></i>
     </div>
-    <div class="faq-a"><p class="pt-3 text-sm" style="color:var(--muted)">Ob Geburtstag, Familienfeier oder Firmenessen – sprechen Sie uns an, wir planen mit Ihnen.</p></div>
+    <div class="faq-a"><p class="pt-4 text-sm leading-relaxed" style="color:var(--muted)">Ob Geburtstag, Familienfeier oder Firmenessen – sprechen Sie uns an, wir planen mit Ihnen.</p></div>
   </div>
-  
 </section>
 
-
 <!-- Footer -->
-<footer class="text-white" style="background:#111827">
-  <div class="max-w-6xl mx-auto px-4 py-12 text-center">
-    <div class="text-xl font-extrabold mb-2">Teichhaus</div>
-    <p class="text-sm mb-6" style="color:#9aa4b2">
-      Winkel 7
-    </p>
-    <p class="text-xs" style="color:#6b7280">© 2026 Teichhaus · Impressum · Datenschutz</p>
-    <p class="text-xs mt-4" style="color:#6b7280">
-      Design-Vorschlag erstellt von <a class="underline" href="https://www.pexuscode.de/">Pexuscode</a>, 09557 Flöha
+<footer class="border-t border-line" style="background:#0c0b0a">
+  <div class="max-w-6xl mx-auto px-4 py-14 text-center">
+    <p class="text-accent2 text-2xl mb-3"><i class="fas fa-tree"></i></p>
+    <div class="font-display text-2xl mb-2">Teichhaus</div>
+    <p class="text-sm mb-2" style="color:var(--muted)">Winkel 7</p>
+    <p class="text-xs mt-4" style="color:#57534a">&copy; 2026 Teichhaus · Impressum · Datenschutz</p>
+    <p class="text-xs mt-4" style="color:#57534a">
+      Design-Vorschlag erstellt von <a class="underline hover:text-white" href="https://www.pexuscode.de/">Pexuscode</a>, 09557 Fl&ouml;ha
     </p>
   </div>
 </footer>
@@ -287,6 +295,10 @@
   document.querySelectorAll('#mobile-nav a').forEach(function (a) {
     a.addEventListener('click', function () { mnav.classList.add('hidden'); mnav.classList.remove('flex'); });
   });
+  var header = document.getElementById('site-header');
+  window.addEventListener('scroll', function () {
+    header.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
   }, { threshold: 0.12 });
