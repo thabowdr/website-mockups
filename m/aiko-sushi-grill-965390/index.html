@@ -1,298 +1,407 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Aiko Sushi &amp; Grill – Asiatische Spezialitäten – frisch zubereitet</title>
-<meta name="description" content="Das Sushi-Tablet Restaurant in Chemnitz">
+<title>Aiko Sushi &amp; Grill – Japanisches Touch &amp; Eat Restaurant in Chemnitz</title>
+<meta name="description" content="Das japanische All-you-can-eat Tablet-Restaurant in Chemnitz – Sushi, Grill &amp; Touch &amp; Eat.">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@300;400;500;600&family=Shippori+Mincho:wght@500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --accent: #c0392b;
-    --accent2: #e67e22;
-    --tint: #fdf0ec;
-    --ink: #1f2733;
-    --muted: #5b6572;
+    --bg: #121316;
+    --panel: #1a1c20;
+    --panel2: #202329;
+    --line: rgba(255,255,255,.08);
+    --accent: #d9432f;        /* Vermillion */
+    --gold: #c9a05a;          /* Messing/Gold */
+    --text: #f1ece3;
+    --muted: #a09a8f;
   }
   html { scroll-behavior: smooth; }
-  html, body { overflow-x: hidden; max-width: 100%; }
-  body { color: var(--ink); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+  html, body { overflow-x: hidden; max-width: 100%; background: var(--bg); }
+  body { color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-weight: 300; }
   img { max-width: 100%; }
+  [id] { scroll-margin-top: 96px; }
+
+  .font-display { font-family: 'Cormorant Garamond', serif; }
+  .font-jp { font-family: 'Shippori Mincho', serif; }
   .text-accent { color: var(--accent); }
-  .bg-accent { background: var(--accent); }
-  .bg-tint { background: var(--tint); }
-  .border-accent { border-color: var(--accent); }
-  [id] { scroll-margin-top: 90px; }
-  .gradient-accent {
-    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
-    background-size: 300% 100%;
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    animation: slide 8s linear infinite;
+  .text-gold { color: var(--gold); }
+  .bg-panel { background: var(--panel); }
+  .border-line { border-color: var(--line); }
+
+  .label {
+    font-size: .7rem; letter-spacing: .35em; text-transform: uppercase;
+    color: var(--gold); font-weight: 500;
   }
-  @keyframes slide { to { background-position: 300% 0; } }
-  .hero-img { animation: float 7s ease-in-out infinite alternate; }
-  @keyframes float { from { transform: translateY(-8px);} to { transform: translateY(8px);} }
-  .fade-up { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
-  .fade-up.show { opacity: 1; transform: none; }
-  .card { transition: transform .3s ease, box-shadow .3s ease; }
-  .card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,.10); }
-  .gal img { transition: transform .5s ease; }
+  .hairline { width: 56px; height: 1px; background: var(--gold); opacity: .6; }
+
+  /* Hero */
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(18,19,22,.55) 0%, rgba(18,19,22,.72) 55%, var(--bg) 100%),
+      url('https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=2000&q=75') center/cover no-repeat;
+  }
+  .kanji-vert {
+    writing-mode: vertical-rl; letter-spacing: .4em;
+    color: rgba(241,236,227,.16); user-select: none;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    background: var(--accent); color: #fff;
+    transition: filter .2s ease, transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 8px 28px rgba(217,67,47,.28);
+  }
+  .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+  .btn-ghost {
+    border: 1px solid rgba(201,160,90,.55); color: var(--text);
+    transition: all .25s ease;
+  }
+  .btn-ghost:hover { background: var(--gold); border-color: var(--gold); color: #16130c; }
+
+  /* Cards */
+  .card { background: var(--panel); border: 1px solid var(--line); transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+  .card:hover { transform: translateY(-6px); border-color: rgba(201,160,90,.4); box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+  .card-img { transition: transform .6s ease; }
+  .card:hover .card-img { transform: scale(1.05); }
+
+  /* Galerie */
+  .gal { position: relative; overflow: hidden; border-radius: .375rem; }
+  .gal img { transition: transform .6s ease; display: block; }
   .gal:hover img { transform: scale(1.06); }
-  .faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+  .gal::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(18,19,22,.55));
+    opacity: 0; transition: opacity .4s ease; pointer-events: none;
+  }
+  .gal:hover::after { opacity: 1; }
+
+  /* Steps */
+  .step-num {
+    font-family: 'Cormorant Garamond', serif; font-size: 3.2rem; line-height: 1;
+    color: transparent; -webkit-text-stroke: 1px rgba(201,160,90,.7);
+  }
+
+  /* FAQ */
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
   .faq.open .faq-a { max-height: 320px; }
   .faq.open .faq-i { transform: rotate(180deg); }
-  .btn-primary { background: var(--accent); color:#fff; transition: filter .2s ease, transform .2s ease; }
-  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-2px); }
-  .btn-ghost { border:1px solid var(--accent); color: var(--accent); transition: all .2s ease; }
-  .btn-ghost:hover { background: var(--accent); color:#fff; }
+
+  /* Animationen */
+  .fade-up { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s ease; }
+  .fade-up.show { opacity: 1; transform: none; }
+  .d1 { transition-delay: .1s; } .d2 { transition-delay: .2s; } .d3 { transition-delay: .3s; }
+
+  /* Header scroll state */
+  #site-header { background: rgba(18,19,22,.35); backdrop-filter: blur(12px); transition: background .3s ease, border-color .3s ease; border-bottom: 1px solid transparent; }
+  #site-header.scrolled { background: rgba(18,19,22,.92); border-bottom-color: var(--line); }
+
   @media (prefers-reduced-motion: reduce) {
-    .gradient-accent, .hero-img { animation: none; }
-    .fade-up { opacity:1; transform:none; transition:none; }
+    .fade-up { opacity: 1; transform: none; transition: none; }
+    .card, .gal img, .card-img { transition: none; }
   }
 </style>
 </head>
-<body class="bg-white">
+<body>
 
 <!-- Hinweis-Banner -->
-<div class="text-white text-center text-xs sm:text-sm py-2 px-4" style="background:#111827">
+<div class="text-center text-xs sm:text-sm py-2 px-4" style="background:#0b0c0e; color:#8b8578">
   Unverbindlicher Design-Vorschlag von Pexuscode ·
-  <a class="underline" href="tel:+4916095530838">+49 160 95530838</a> ·
-  <a class="underline" href="mailto:pexuscodede@gmail.com">pexuscodede@gmail.com</a>
+  <a class="underline hover:text-white" href="tel:+4916095530838">+49 160 95530838</a> ·
+  <a class="underline hover:text-white" href="mailto:pexuscodede@gmail.com">pexuscodede@gmail.com</a>
 </div>
 
 <!-- Header -->
-<header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b" style="border-color:#eef1f5">
-  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-    <a href="#top" class="flex items-center gap-2 font-extrabold text-lg tracking-tight">
-      <span class="inline-flex w-9 h-9 rounded-lg items-center justify-center text-white bg-accent">
-        <i class="fas fa-utensils"></i>
-      </span>
-      <span>Aiko Sushi &amp; Grill</span>
+<header id="site-header" class="sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-3">
+      <span class="font-jp text-2xl text-gold leading-none">愛</span>
+      <span class="font-display text-xl tracking-wide">Aiko <span class="text-gold">Sushi &amp; Grill</span></span>
     </a>
-    <nav class="hidden md:flex items-center gap-7 text-sm font-medium">
-      <a href="#leistungen" class="hover:text-accent">Das erwartet Sie</a>
-      <a href="#galerie" class="hover:text-accent">Galerie</a>
-      <a href="#ueber" class="hover:text-accent">Über uns</a>
-      <a href="#kontakt" class="hover:text-accent">Kontakt</a>
+    <nav class="hidden md:flex items-center gap-8 text-sm" style="color:var(--muted)">
+      <a href="#touch-eat" class="hover:text-white transition-colors">Touch &amp; Eat</a>
+      <a href="#angebot" class="hover:text-white transition-colors">Angebot</a>
+      <a href="#galerie" class="hover:text-white transition-colors">Galerie</a>
+      <a href="#speisekarte" class="hover:text-white transition-colors">Speisekarte</a>
+      <a href="#kontakt" class="hover:text-white transition-colors">Kontakt</a>
     </nav>
     <div class="flex items-center gap-3">
-      <a href="tel:+4916095530838"
-         class="hidden sm:inline-flex btn-primary px-4 py-2 rounded-full text-sm font-semibold">
-        <i class="fas fa-phone mr-2"></i>Anrufen
+      <a href="tel:+4937156006677" class="hidden sm:inline-flex btn-primary px-5 py-2.5 rounded-sm text-sm font-medium items-center">
+        <i class="fas fa-phone mr-2 text-xs"></i>0371 56006677
       </a>
-      <button id="burger" class="md:hidden text-2xl" aria-label="Menü"><i class="fas fa-bars"></i></button>
+      <button id="burger" class="md:hidden text-2xl text-gold" aria-label="Menü öffnen"><i class="fas fa-bars"></i></button>
     </div>
   </div>
-  <nav id="mobile-nav" class="hidden md:hidden px-4 pb-4 flex-col gap-3 text-sm font-medium bg-white border-b" style="border-color:#eef1f5">
-    <a href="#leistungen" class="block py-1">Das erwartet Sie</a>
+  <nav id="mobile-nav" class="hidden md:hidden px-4 pb-5 flex-col gap-4 text-sm" style="background:rgba(18,19,22,.97); color:var(--muted)">
+    <a href="#touch-eat" class="block py-1">Touch &amp; Eat</a>
+    <a href="#angebot" class="block py-1">Angebot</a>
     <a href="#galerie" class="block py-1">Galerie</a>
-    <a href="#ueber" class="block py-1">Über uns</a>
+    <a href="#speisekarte" class="block py-1">Speisekarte</a>
     <a href="#kontakt" class="block py-1">Kontakt</a>
+    <a href="tel:+4937156006677" class="btn-primary inline-flex self-start px-5 py-2.5 rounded-sm font-medium mt-1"><i class="fas fa-phone mr-2 text-xs"></i>Anrufen</a>
   </nav>
 </header>
 
 <!-- Hero -->
-<section id="top" class="bg-tint">
-  <div class="max-w-6xl mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
-    <div class="fade-up">
-      <span class="inline-block text-xs font-semibold uppercase tracking-wider text-accent mb-4">
-        Chemnitz · Asiatische Küche
-      </span>
-      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">
-        Frisch aus dem <span class="gradient-accent">Wok</span> auf Ihren Tisch
+<section id="top" class="relative -mt-[76px]">
+  <div class="hero-bg"></div>
+  <div class="relative max-w-6xl mx-auto px-4 pt-44 pb-28 md:pt-56 md:pb-40">
+    <span class="kanji-vert hidden lg:block absolute right-6 top-40 text-5xl font-jp">愛子 · 寿司</span>
+    <div class="max-w-2xl fade-up show">
+      <p class="label mb-5">Chemnitz · Japanische Küche</p>
+      <h1 class="font-display text-5xl md:text-7xl leading-[1.05] mb-6">
+        Sushi ohne Grenzen.<br>
+        <span class="italic" style="color:var(--gold)">Bestellt per Tablet,</span><br>
+        frisch serviert.
       </h1>
-      <p class="text-lg mb-8" style="color:var(--muted)">Asiatische Spezialitäten – frisch zubereitet – in Chemnitz und Umgebung.</p>
-      <div class="flex flex-wrap gap-3">
-        <a href="#kontakt" class="btn-primary px-6 py-3 rounded-full font-semibold">Termin anfragen</a>
-        <a href="#leistungen" class="btn-ghost px-6 py-3 rounded-full font-semibold">Leistungen ansehen</a>
+      <p class="text-lg md:text-xl mb-10 max-w-xl" style="color:var(--muted)">
+        Das japanische All-you-can-eat Restaurant in Chemnitz &mdash; mit unserem
+        <span class="text-white font-normal">Touch&nbsp;&amp;&nbsp;Eat</span> Konzept bestellen Sie so oft Sie m&ouml;chten, direkt vom Tisch.
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <a href="tel:+4937156006677" class="btn-primary px-8 py-3.5 rounded-sm font-medium">Tisch reservieren</a>
+        <a href="#speisekarte" class="btn-ghost px-8 py-3.5 rounded-sm font-medium">Speisekarte ansehen</a>
       </div>
-    </div>
-    <div class="fade-up">
-      <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Aiko Sushi &amp; Grill" loading="lazy"
-           class="hero-img rounded-2xl shadow-2xl w-full h-72 md:h-96 object-cover">
     </div>
   </div>
 </section>
 
-<!-- Leistungen -->
-<section id="leistungen" class="max-w-6xl mx-auto px-4 py-16">
-  <div class="text-center mb-12 fade-up">
-    <h2 class="text-3xl font-bold mb-3">Das erwartet Sie</h2>
-    <p class="max-w-2xl mx-auto" style="color:var(--muted)">Ehrliche Küche, gemütliches Ambiente und ein Team, das gern für Sie da ist.</p>
+<!-- Touch & Eat -->
+<section id="touch-eat" class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+  <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+    <div class="fade-up">
+      <p class="label mb-4">01 &mdash; Unser Konzept</p>
+      <h2 class="font-display text-4xl md:text-5xl mb-4">Touch &amp; Eat</h2>
+      <div class="hairline mb-6"></div>
+      <p class="mb-6 leading-relaxed" style="color:var(--muted)">
+        All you can eat &mdash; aber frisch wie &agrave; la carte. Statt vom Buffet bestellen Sie
+        bequem &uuml;ber das Tablet an Ihrem Tisch. Jede Runde wird erst nach Ihrer Bestellung
+        zubereitet und direkt an den Tisch gebracht.
+      </p>
+      <div class="space-y-7 mt-10">
+        <div class="flex gap-6 items-start fade-up d1">
+          <span class="step-num">01</span>
+          <div>
+            <h3 class="font-medium text-lg mb-1">Platz nehmen</h3>
+            <p class="text-sm leading-relaxed" style="color:var(--muted)">Reservieren Sie telefonisch oder kommen Sie spontan vorbei.</p>
+          </div>
+        </div>
+        <div class="flex gap-6 items-start fade-up d2">
+          <span class="step-num">02</span>
+          <div>
+            <h3 class="font-medium text-lg mb-1">Per Tablet bestellen</h3>
+            <p class="text-sm leading-relaxed" style="color:var(--muted)">W&auml;hlen Sie aus Sushi, Grill &amp; mehr &mdash; Ihre Bestellung geht direkt an K&uuml;che und Bar.</p>
+          </div>
+        </div>
+        <div class="flex gap-6 items-start fade-up d3">
+          <span class="step-num">03</span>
+          <div>
+            <h3 class="font-medium text-lg mb-1">Frisch genie&szlig;en</h3>
+            <p class="text-sm leading-relaxed" style="color:var(--muted)">Jedes Gericht kommt frisch zubereitet an Ihren Tisch &mdash; so oft Sie m&ouml;chten.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fade-up d1 relative">
+      <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=1200&q=75"
+           alt="Frisch zubereitetes Sushi" loading="lazy"
+           class="rounded-sm w-full h-[420px] md:h-[540px] object-cover">
+      <div class="absolute -bottom-6 -left-6 hidden md:block bg-panel border border-line rounded-sm px-6 py-5">
+        <p class="font-display text-3xl text-gold">All you can eat</p>
+        <p class="text-xs tracking-widest uppercase mt-1" style="color:var(--muted)">Frisch statt Buffet</p>
+      </div>
+    </div>
   </div>
-  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    
-    <div class="card fade-up bg-white rounded-2xl p-7 border" style="border-color:#eef1f5">
-      <div class="w-12 h-12 rounded-xl bg-tint flex items-center justify-center text-accent text-xl mb-4">
-        <i class="fas fa-utensils"></i>
-      </div>
-      <h3 class="text-lg font-semibold mb-2">Frische Küche</h3>
-      <p style="color:var(--muted)">Saisonale Gerichte aus regionalen Zutaten – täglich frisch für Sie zubereitet.</p>
+</section>
+
+<!-- Angebot -->
+<section id="angebot" class="border-t border-b border-line" style="background:var(--panel)">
+  <div class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+    <div class="text-center mb-14 fade-up">
+      <p class="label mb-4">02 &mdash; Unsere K&uuml;che</p>
+      <h2 class="font-display text-4xl md:text-5xl mb-4">Das erwartet Sie</h2>
+      <div class="hairline mx-auto"></div>
     </div>
-    
-    <div class="card fade-up bg-white rounded-2xl p-7 border" style="border-color:#eef1f5">
-      <div class="w-12 h-12 rounded-xl bg-tint flex items-center justify-center text-accent text-xl mb-4">
-        <i class="fas fa-champagne-glasses"></i>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="card fade-up rounded-sm overflow-hidden">
+        <div class="h-52 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=900&q=70" alt="Sushi und Unique Rolls" loading="lazy" class="card-img w-full h-full object-cover">
+        </div>
+        <div class="p-7">
+          <h3 class="font-display text-2xl mb-2">Sushi &amp; Unique Rolls</h3>
+          <p class="text-sm leading-relaxed" style="color:var(--muted)">Klassische Sushi-Variationen und kreative Rolls nach internationalen Trends &mdash; t&auml;glich frisch gerollt.</p>
+        </div>
       </div>
-      <h3 class="text-lg font-semibold mb-2">Feiern &amp; Events</h3>
-      <p style="color:var(--muted)">Ob Familienfeier oder Firmenessen – wir richten Ihre Veranstaltung gern aus.</p>
-    </div>
-    
-    <div class="card fade-up bg-white rounded-2xl p-7 border" style="border-color:#eef1f5">
-      <div class="w-12 h-12 rounded-xl bg-tint flex items-center justify-center text-accent text-xl mb-4">
-        <i class="fas fa-bag-shopping"></i>
+      <div class="card fade-up d1 rounded-sm overflow-hidden">
+        <div class="h-52 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=70" alt="Grillgerichte und warme Küche" loading="lazy" class="card-img w-full h-full object-cover">
+        </div>
+        <div class="p-7">
+          <h3 class="font-display text-2xl mb-2">Grill &amp; warme K&uuml;che</h3>
+          <p class="text-sm leading-relaxed" style="color:var(--muted)">Von Tempura bis zu modernen Grillvariationen &mdash; japanische Klassiker, hei&szlig; serviert.</p>
+        </div>
       </div>
-      <h3 class="text-lg font-semibold mb-2">Außer Haus</h3>
-      <p style="color:var(--muted)">Ihre Lieblingsgerichte zum Mitnehmen – einfach vorbestellen und abholen.</p>
+      <div class="card fade-up d2 rounded-sm overflow-hidden">
+        <div class="h-52 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1526318896980-cf78c088247c?auto=format&fit=crop&w=900&q=70" alt="Take-away und Außer Haus" loading="lazy" class="card-img w-full h-full object-cover">
+        </div>
+        <div class="p-7">
+          <h3 class="font-display text-2xl mb-2">Au&szlig;er Haus</h3>
+          <p class="text-sm leading-relaxed" style="color:var(--muted)">Ihre Lieblingsgerichte zum Mitnehmen &mdash; telefonisch vorbestellen und bequem abholen.</p>
+        </div>
+      </div>
     </div>
-    
   </div>
 </section>
 
 <!-- Galerie -->
-<section id="galerie" class="bg-tint">
-  <div class="max-w-6xl mx-auto px-4 py-16">
-    <div class="text-center mb-12 fade-up">
-      <h2 class="text-3xl font-bold mb-3">Einblicke</h2>
-      <p class="max-w-2xl mx-auto" style="color:var(--muted)">Ein Eindruck von Aiko Sushi &amp; Grill.</p>
+<section id="galerie" class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+  <div class="text-center mb-14 fade-up">
+    <p class="label mb-4">03 &mdash; Einblicke</p>
+    <h2 class="font-display text-4xl md:text-5xl mb-4">Ein Abend bei Aiko</h2>
+    <div class="hairline mx-auto"></div>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[160px] md:auto-rows-[200px]">
+    <div class="gal fade-up col-span-2 row-span-2">
+      <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=1200&q=70" alt="Sushi-Platte" loading="lazy" class="w-full h-full object-cover">
     </div>
-    <div class="grid sm:grid-cols-3 gap-5">
-      
-      <div class="gal fade-up rounded-2xl overflow-hidden shadow-md">
-        <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Aiko Sushi &amp; Grill – Eindruck 1" loading="lazy"
-             class="w-full h-56 object-cover">
-      </div>
-      
-      <div class="gal fade-up rounded-2xl overflow-hidden shadow-md">
-        <img src="https://images.unsplash.com/photo-1526318896980-cf78c088247c?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Aiko Sushi &amp; Grill – Eindruck 2" loading="lazy"
-             class="w-full h-56 object-cover">
-      </div>
-      
-      <div class="gal fade-up rounded-2xl overflow-hidden shadow-md">
-        <img src="https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Aiko Sushi &amp; Grill – Eindruck 3" loading="lazy"
-             class="w-full h-56 object-cover">
-      </div>
-      
+    <div class="gal fade-up d1">
+      <img src="https://images.unsplash.com/photo-1607301405390-d831c242f59b?auto=format&fit=crop&w=700&q=70" alt="Lachs-Nigiri" loading="lazy" class="w-full h-full object-cover">
+    </div>
+    <div class="gal fade-up d2">
+      <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=700&q=70" alt="Ramen" loading="lazy" class="w-full h-full object-cover">
+    </div>
+    <div class="gal fade-up d2">
+      <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=700&q=70" alt="Restaurant-Ambiente" loading="lazy" class="w-full h-full object-cover">
+    </div>
+    <div class="gal fade-up d3">
+      <img src="https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?auto=format&fit=crop&w=700&q=70" alt="Sushi-Auswahl" loading="lazy" class="w-full h-full object-cover">
     </div>
   </div>
 </section>
 
-<!-- Über uns -->
-<section id="ueber" class="max-w-4xl mx-auto px-4 py-16 text-center fade-up">
-  <h2 class="text-3xl font-bold mb-5">Über uns</h2>
-  <p class="text-lg leading-relaxed" style="color:var(--muted)">Genuss und Frische wird bei uns groß geschrieben. Damit Sie so viele frisch zubereitete Speisen wie möglich aus der japanischen Küche probieren können, bieten wir Ihnen unser umfangreiches all you can eat Angebot &#34;Touch &amp; Eat&#34;. Hierbei können Sie Ihre Bestellung ganz bequem über Tablets direkt an Küche oder Bar schicken – um den Rest kümmern wir uns. &gt; Mehr erfahren</p>
-  
-  <div class="flex flex-wrap justify-center gap-2 mt-8">
-    
-    <span class="text-sm px-4 py-1.5 rounded-full bg-tint text-accent font-semibold capitalize">Touch &amp; Eat</span>
-    
-    <span class="text-sm px-4 py-1.5 rounded-full bg-tint text-accent font-semibold capitalize">Take-away Karte</span>
-    
-    <span class="text-sm px-4 py-1.5 rounded-full bg-tint text-accent font-semibold capitalize">Speisekarte</span>
-    
-    <span class="text-sm px-4 py-1.5 rounded-full bg-tint text-accent font-semibold capitalize">Restaurant-Karte (PDF)</span>
-    
-    <span class="text-sm px-4 py-1.5 rounded-full bg-tint text-accent font-semibold capitalize">Außerhaus-Karte (PDF)</span>
-    
+<!-- Speisekarte -->
+<section id="speisekarte" class="border-t border-b border-line" style="background:var(--panel)">
+  <div class="max-w-4xl mx-auto px-4 py-20 md:py-28 text-center">
+    <div class="fade-up">
+      <p class="label mb-4">04 &mdash; Speisekarte</p>
+      <h2 class="font-display text-4xl md:text-5xl mb-4">Lust bekommen?</h2>
+      <div class="hairline mx-auto mb-6"></div>
+      <p class="max-w-xl mx-auto mb-10 leading-relaxed" style="color:var(--muted)">
+        St&ouml;bern Sie vorab in unseren Karten &mdash; im Restaurant bestellen Sie dann
+        ganz bequem &uuml;ber das Tablet.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="http://www.aiko-chemnitz.de/images/Aiko_Speisekarte_140124.pdf" target="_blank" rel="noopener"
+           class="btn-ghost px-7 py-3.5 rounded-sm font-medium inline-flex items-center">
+          <i class="far fa-file-pdf mr-3 text-gold"></i>Restaurant-Karte (PDF)
+        </a>
+        <a href="http://www.aiko-chemnitz.de/images/AIKO_Take-away_040423.pdf" target="_blank" rel="noopener"
+           class="btn-ghost px-7 py-3.5 rounded-sm font-medium inline-flex items-center">
+          <i class="far fa-file-pdf mr-3 text-gold"></i>Take-away-Karte (PDF)
+        </a>
+      </div>
+    </div>
   </div>
-  
-  
-  <p class="mt-6 text-sm font-medium text-accent uppercase tracking-wide">Küche: asian</p>
-  
 </section>
 
-<!-- Öffnungszeiten + Kontakt -->
-<section id="kontakt" class="bg-tint">
-  <div class="max-w-6xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-8">
-    <div class="fade-up bg-white rounded-2xl p-8 border" style="border-color:#eef1f5">
-      <h3 class="text-xl font-semibold mb-6"><i class="fas fa-clock text-accent mr-2"></i>Öffnungszeiten</h3>
-      
+<!-- Kontakt -->
+<section id="kontakt" class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+  <div class="text-center mb-14 fade-up">
+    <p class="label mb-4">05 &mdash; Besuchen Sie uns</p>
+    <h2 class="font-display text-4xl md:text-5xl mb-4">&Ouml;ffnungszeiten &amp; Kontakt</h2>
+    <div class="hairline mx-auto"></div>
+  </div>
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="card fade-up rounded-sm p-9">
+      <h3 class="font-display text-2xl mb-6"><i class="far fa-clock text-gold mr-3"></i>&Ouml;ffnungszeiten</h3>
       <table class="w-full text-sm">
-        
-        <tr class="border-b last:border-0" style="border-color:#eef1f5">
-          <td class="py-2 font-medium">Montag–Sonntag</td>
-          <td class="py-2 text-right" style="color:var(--muted)">11:30-15:00, 17:30-23:00</td>
+        <tr class="border-b border-line">
+          <td class="py-3 font-medium">Montag &ndash; Sonntag</td>
+          <td class="py-3 text-right" style="color:var(--muted)">11:30 &ndash; 15:00 Uhr</td>
         </tr>
-        
+        <tr>
+          <td class="py-3"></td>
+          <td class="py-3 text-right" style="color:var(--muted)">17:30 &ndash; 23:00 Uhr</td>
+        </tr>
       </table>
-      
+      <p class="text-xs mt-5" style="color:var(--muted)">T&auml;glich f&uuml;r Sie ge&ouml;ffnet &mdash; auch an Feiertagen.</p>
     </div>
-    <div class="fade-up bg-white rounded-2xl p-8 border" style="border-color:#eef1f5">
-      <h3 class="text-xl font-semibold mb-6"><i class="fas fa-location-dot text-accent mr-2"></i>Kontakt</h3>
-      <ul class="space-y-4 text-sm">
-        <li class="flex gap-3"><i class="fas fa-map-marker-alt text-accent mt-1"></i>
-          <span>Zschopauer Straße 178, 09126 Chemnitz</span></li>
-        
-        
+    <div class="card fade-up d1 rounded-sm p-9">
+      <h3 class="font-display text-2xl mb-6"><i class="fas fa-location-dot text-gold mr-3"></i>Kontakt</h3>
+      <ul class="space-y-4 text-sm" style="color:var(--muted)">
+        <li class="flex gap-3"><i class="fas fa-map-marker-alt text-gold mt-1"></i>
+          <span>Zschopauer Stra&szlig;e 178, 09126 Chemnitz</span></li>
+        <li class="flex gap-3"><i class="fas fa-phone text-gold mt-1"></i>
+          <a href="tel:+4937156006677" class="hover:text-white transition-colors">0371 56006677</a></li>
+        <li class="flex gap-3"><i class="fab fa-facebook text-gold mt-1"></i>
+          <a href="https://www.facebook.com/Restaurant-Aiko-Chemnitz-640575639619659/" target="_blank" rel="noopener" class="hover:text-white transition-colors">Aiko auf Facebook</a></li>
       </ul>
-      
-      <a href="tel:+4916095530838"
-         class="btn-primary inline-flex mt-8 px-6 py-3 rounded-full font-semibold"><i class="fas fa-phone mr-2"></i>Jetzt anrufen</a>
+      <div class="flex flex-wrap gap-4 mt-8">
+        <a href="tel:+4937156006677" class="btn-primary px-6 py-3 rounded-sm font-medium inline-flex items-center">
+          <i class="fas fa-phone mr-2 text-xs"></i>Jetzt anrufen</a>
+        <a href="https://maps.google.com/?q=Zschopauer+Stra%C3%9Fe+178%2C+09126+Chemnitz" target="_blank" rel="noopener"
+           class="btn-ghost px-6 py-3 rounded-sm font-medium inline-flex items-center">
+          <i class="fas fa-route mr-2 text-xs"></i>Route planen</a>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- FAQ -->
+<section class="max-w-3xl mx-auto px-4 pb-20 md:pb-28">
+  <h2 class="font-display text-4xl text-center mb-12 fade-up">H&auml;ufige Fragen</h2>
 
-<section class="max-w-3xl mx-auto px-4 py-16">
-  <h2 class="text-3xl font-bold text-center mb-10 fade-up">Häufige Fragen</h2>
-  
-  <div class="faq fade-up border-b py-4 cursor-pointer" style="border-color:#eef1f5" onclick="this.classList.toggle('open')">
-    <div class="flex justify-between items-center">
+  <div class="faq fade-up border-b border-line py-5 cursor-pointer" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center gap-4">
+      <h3 class="font-medium">Wie funktioniert Touch &amp; Eat genau?</h3>
+      <i class="faq-i fas fa-chevron-down text-gold transition-transform"></i>
+    </div>
+    <div class="faq-a"><p class="pt-4 text-sm leading-relaxed" style="color:var(--muted)">Sie bestellen &uuml;ber das Tablet an Ihrem Tisch &mdash; so oft Sie m&ouml;chten. Jede Bestellung wird frisch zubereitet und direkt serviert. All you can eat, ohne Buffet.</p></div>
+  </div>
+
+  <div class="faq fade-up border-b border-line py-5 cursor-pointer" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center gap-4">
       <h3 class="font-medium">Kann ich einen Tisch reservieren?</h3>
-      <i class="faq-i fas fa-chevron-down text-accent transition-transform"></i>
+      <i class="faq-i fas fa-chevron-down text-gold transition-transform"></i>
     </div>
-    <div class="faq-a"><p class="pt-3 text-sm" style="color:var(--muted)">Sehr gern – rufen Sie uns einfach an, wir halten Ihnen Ihren Wunschtisch bereit.</p></div>
+    <div class="faq-a"><p class="pt-4 text-sm leading-relaxed" style="color:var(--muted)">Sehr gern &mdash; rufen Sie uns unter <a href="tel:+4937156006677" class="text-gold">0371 56006677</a> an, wir halten Ihnen Ihren Wunschtisch bereit.</p></div>
   </div>
-  
-  <div class="faq fade-up border-b py-4 cursor-pointer" style="border-color:#eef1f5" onclick="this.classList.toggle('open')">
-    <div class="flex justify-between items-center">
-      <h3 class="font-medium">Bieten Sie auch Speisen zum Mitnehmen an?</h3>
-      <i class="faq-i fas fa-chevron-down text-accent transition-transform"></i>
+
+  <div class="faq fade-up border-b border-line py-5 cursor-pointer" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center gap-4">
+      <h3 class="font-medium">Gibt es Gerichte auch zum Mitnehmen?</h3>
+      <i class="faq-i fas fa-chevron-down text-gold transition-transform"></i>
     </div>
-    <div class="faq-a"><p class="pt-3 text-sm" style="color:var(--muted)">Ja, viele unserer Gerichte gibt es auch außer Haus. Bestellen Sie telefonisch vor.</p></div>
+    <div class="faq-a"><p class="pt-4 text-sm leading-relaxed" style="color:var(--muted)">Ja &mdash; viele Gerichte gibt es au&szlig;er Haus. Werfen Sie einen Blick in die Take-away-Karte und bestellen Sie telefonisch vor.</p></div>
   </div>
-  
-  <div class="faq fade-up border-b py-4 cursor-pointer" style="border-color:#eef1f5" onclick="this.classList.toggle('open')">
-    <div class="flex justify-between items-center">
-      <h3 class="font-medium">Richten Sie Feiern aus?</h3>
-      <i class="faq-i fas fa-chevron-down text-accent transition-transform"></i>
+
+  <div class="faq fade-up border-b border-line py-5 cursor-pointer" onclick="this.classList.toggle('open')">
+    <div class="flex justify-between items-center gap-4">
+      <h3 class="font-medium">Richten Sie auch Feiern aus?</h3>
+      <i class="faq-i fas fa-chevron-down text-gold transition-transform"></i>
     </div>
-    <div class="faq-a"><p class="pt-3 text-sm" style="color:var(--muted)">Ob Geburtstag, Familienfeier oder Firmenessen – sprechen Sie uns an, wir planen mit Ihnen.</p></div>
+    <div class="faq-a"><p class="pt-4 text-sm leading-relaxed" style="color:var(--muted)">Ob Geburtstag, Familienfeier oder Firmenessen &mdash; sprechen Sie uns an, wir planen gern mit Ihnen.</p></div>
   </div>
-  
 </section>
 
-
 <!-- Footer -->
-<footer class="text-white" style="background:#111827">
-  <div class="max-w-6xl mx-auto px-4 py-12 text-center">
-    <div class="text-xl font-extrabold mb-2">Aiko Sushi &amp; Grill</div>
-    <p class="text-sm mb-6" style="color:#9aa4b2">
-      Zschopauer Straße 178, 09126 Chemnitz
-    </p>
-    <p class="text-xs" style="color:#6b7280">© 2026 Aiko Sushi &amp; Grill · Impressum · Datenschutz</p>
-    <p class="text-xs mt-4" style="color:#6b7280">
-      Design-Vorschlag erstellt von <a class="underline" href="https://www.pexuscode.de/">Pexuscode</a>, 09557 Flöha
+<footer class="border-t border-line" style="background:#0b0c0e">
+  <div class="max-w-6xl mx-auto px-4 py-14 text-center">
+    <p class="font-jp text-3xl text-gold mb-3">愛子</p>
+    <div class="font-display text-2xl mb-2">Aiko Sushi &amp; Grill</div>
+    <p class="text-sm mb-2" style="color:var(--muted)">Zschopauer Stra&szlig;e 178, 09126 Chemnitz · <a href="tel:+4937156006677" class="hover:text-white">0371 56006677</a></p>
+    <a href="https://www.facebook.com/Restaurant-Aiko-Chemnitz-640575639619659/" target="_blank" rel="noopener" class="inline-flex text-gold hover:text-white transition-colors text-lg mb-6" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+    <p class="text-xs" style="color:#57534a">&copy; 2026 Aiko Sushi &amp; Grill · Impressum · Datenschutz</p>
+    <p class="text-xs mt-4" style="color:#57534a">
+      Design-Vorschlag erstellt von <a class="underline hover:text-white" href="https://www.pexuscode.de/">Pexuscode</a>, 09557 Fl&ouml;ha
     </p>
   </div>
 </footer>
@@ -303,6 +412,10 @@
   document.querySelectorAll('#mobile-nav a').forEach(function (a) {
     a.addEventListener('click', function () { mnav.classList.add('hidden'); mnav.classList.remove('flex'); });
   });
+  var header = document.getElementById('site-header');
+  window.addEventListener('scroll', function () {
+    header.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
   }, { threshold: 0.12 });
