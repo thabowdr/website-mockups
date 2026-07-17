@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Reservierungs-Modul – Demo</title>
+<style>
+  body { margin: 0; background: #141312; color: #f0ebe3;
+         font-family: system-ui, sans-serif; min-height: 100vh;
+         display: grid; place-items: center; padding: 2rem; box-sizing: border-box; }
+  .wrap { max-width: 480px; width: 100%; }
+  h1 { font-size: 1.3rem; }
+  p { color: #a49c90; font-size: .9rem; line-height: 1.5; }
+  a { color: #c08a4e; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Reservierungs-Modul – Demo</h1>
+  <p>So sieht das Widget eingebettet in einer Kundenseite aus.
+     Eine abgeschickte Reservierung erscheint sofort im
+     <a href="dashboard.html?r=demo">Dashboard</a> (gern in einem zweiten Tab öffnen).</p>
+  <div id="resv-widget" data-restaurant="demo"></div>
+</div>
+<script src="store.js"></script>
+<script src="widget.js"></script>
+</body>
+</html>
