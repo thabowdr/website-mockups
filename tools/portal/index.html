@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Betriebsportal</title>
+<link rel="stylesheet" href="portal.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <p class="brand" id="brand">Betriebsportal<small id="brand-sub"></small></p>
+    <nav id="nav"></nav>
+  </aside>
+  <main>
+    <h1 id="mod-title"></h1>
+    <p class="sub" id="mod-sub"></p>
+    <div id="module"></div>
+  </main>
+</div>
+<div id="toast" role="status">
+  <button type="button" class="close" aria-label="Schließen">×</button>
+  <div class="to"></div>
+  <div class="txt"></div>
+</div>
+<script src="core/store.js"></script>
+<script src="core/ui.js"></script>
+<script>
+  /* Modul-Registry: Module registrieren sich beim Laden. */
+  window.Portal = {
+    modules: [],
+    register(mod) { this.modules.push(mod); }
+  };
+</script>
+<script src="module/uebersicht.js"></script>
+<script src="module/reservierungen.js"></script>
+<script src="module/bestellungen.js"></script>
+<script src="module/anfragen.js"></script>
+<script src="module/speisekarte.js"></script>
+<script src="module/zeiten.js"></script>
+<script src="module/news.js"></script>
+<script>
+(function () {
+  'use strict';
+  const params = new URLSearchParams(location.search);
+  const ctx = {
+    restaurantId: params.get('r') || 'demo',
+    restaurantName: params.get('name') || params.get('r') || 'demo',
+    store: window.ResvStore,
+    ui: window.PortalUI
+  };
+  ctx.store.seedDemo(ctx.restaurantId);
+  document.getElementById('brand-sub').textContent = ctx.restaurantName;
+
+  const GROUPS = [
+    { id: '', label: '' },
+    { id: 'eingang', label: 'Eingang' },
+    { id: 'inhalte', label: 'Inhalte' }
+  ];
+
+  function currentId() {
+    const id = location.hash.replace('#', '');
+    return Portal.modules.some(function (m) { return m.id === id; }) ? id : Portal.modules[0].id;
+  }
+
+  function renderNav() {
+    const active = currentId();
+    const nav = document.getElementById('nav');
+    nav.innerHTML = GROUPS.map(function (g) {
+      const mods = Portal.modules.filter(function (m) { return (m.group || '') === g.id; });
+      if (!mods.length) return '';
+      return (g.label ? '<p class="group">' + g.label + '</p>' : '') +
+        mods.map(function (m) {
+          const count = m.badge ? m.badge(ctx) : 0;
+          return '<a href="#' + m.id + '"' + (m.id === active ? ' class="active"' : '') + '>' +
+            '<span>' + m.title + '</span>' +
+            (count ? '<span class="count">' + count + '</span>' : '') + '</a>';
+        }).join('');
+    }).join('');
+  }
+
+  function renderModule() {
+    const mod = Portal.modules.find(function (m) { return m.id === currentId(); });
+    document.getElementById('mod-title').textContent = mod.title;
+    document.getElementById('mod-sub').textContent = mod.subtitle || '';
+    const container = document.getElementById('module');
+    container.innerHTML = '';
+    mod.render(container, ctx);
+    renderNav();
+  }
+
+  window.addEventListener('hashchange', renderModule);
+  /* Änderungen aus anderen Tabs (Widget, Gast-Antwort) live übernehmen. */
+  window.addEventListener('storage', renderModule);
+  document.querySelector('#toast .close').addEventListener('click', function () {
+    document.getElementById('toast').classList.remove('show');
+  });
+
+  renderModule();
+})();
+</script>
+</body>
+</html>

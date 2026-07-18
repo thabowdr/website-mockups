@@ -1,6 +1,11 @@
 # Reservierungs-Modul
 
-Grundstruktur für Online-Reservierung mit Dashboard, kopierbar in jedes Kundenprojekt.
+Grundstruktur für Online-Reservierung, kopierbar in jedes Kundenprojekt.
+
+**Hinweis:** Das Dashboard ist ins [Betriebsportal](../portal/README.md) umgezogen
+(`dashboard.html` leitet dorthin weiter). Hier bleiben das Widget (`widget.js`),
+die Datenschicht (`store.js`, identisch mit `../portal/core/store.js`) und die
+Widget-Demo (`index.html`).
 
 ## Dateien
 

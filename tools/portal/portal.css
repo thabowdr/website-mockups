@@ -1,0 +1,129 @@
+/* Gemeinsame Design-Tokens und Bausteine des Betriebsportals. */
+:root {
+  --bg: #14161a; --panel: #1c1f24; --line: rgba(255,255,255,.09);
+  --accent: #c08a4e; --text: #eef0f2; --muted: #99a0a8;
+  --ok: #6fbf8a; --warn: #e0b25a; --bad: #d97a6f; --info: #7aa7d9;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+       font-family: system-ui, sans-serif; }
+
+/* ---- Shell ---- */
+.shell { display: grid; grid-template-columns: 230px 1fr; min-height: 100vh; }
+@media (max-width: 760px) { .shell { grid-template-columns: 1fr; } }
+.side { border-right: 1px solid var(--line); padding: 1.25rem 1rem; }
+@media (max-width: 760px) { .side { border-right: 0; border-bottom: 1px solid var(--line); } }
+.side .brand { font-weight: 600; margin: 0 .5rem 1.25rem; }
+.side .brand small { display: block; color: var(--muted); font-weight: 400; font-size: .75rem; margin-top: .15rem; }
+.side .group { font-size: .68rem; letter-spacing: .15em; text-transform: uppercase;
+               color: var(--muted); margin: 1.1rem .5rem .35rem; }
+.side nav { display: flex; flex-direction: column; gap: .15rem; }
+@media (max-width: 760px) { .side nav { flex-direction: row; flex-wrap: wrap; } }
+.side a { display: flex; align-items: center; justify-content: space-between; gap: .5rem;
+          color: var(--text); text-decoration: none; padding: .5rem .6rem;
+          border-radius: 8px; font-size: .9rem; }
+.side a:hover { background: rgba(255,255,255,.05); }
+.side a.active { background: var(--accent); color: #1b130a; font-weight: 600; }
+.side a .count { background: rgba(224,178,90,.2); color: var(--warn); font-size: .7rem;
+                 border-radius: 999px; padding: .1rem .5rem; font-variant-numeric: tabular-nums; }
+.side a.active .count { background: rgba(0,0,0,.2); color: #1b130a; }
+main { padding: 1.5rem; max-width: 900px; }
+main h1 { font-size: 1.15rem; margin: 0 0 .25rem; }
+main .sub { color: var(--muted); font-size: .8rem; margin: 0 0 1.5rem; }
+
+/* ---- Kennzahlen ---- */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+         gap: .75rem; margin-bottom: 1.5rem; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 1rem; }
+.stat .num { font-size: 1.6rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.stat .lbl { color: var(--muted); font-size: .75rem; margin-top: .25rem; }
+
+/* ---- Tabs ---- */
+.tabs { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.tabs button { background: var(--panel); color: var(--muted); border: 1px solid var(--line);
+               border-radius: 999px; padding: .4rem 1rem; cursor: pointer; font: inherit; font-size: .85rem; }
+.tabs button.active { background: var(--accent); color: #1b130a; border-color: var(--accent); font-weight: 600; }
+
+/* ---- Statuskarten ---- */
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+        padding: 1rem 1.25rem; margin-bottom: .75rem;
+        display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.card.neu { border-left: 3px solid var(--warn); }
+.card.bestaetigt { border-left: 3px solid var(--ok); }
+.card.vorschlag { border-left: 3px solid var(--info); }
+.card.storniert, .card.noshow { border-left: 3px solid var(--bad); opacity: .55; }
+.who { font-weight: 600; }
+.meta { color: var(--muted); font-size: .85rem; margin-top: .15rem; }
+.badge { font-size: .7rem; padding: .2rem .6rem; border-radius: 999px;
+         text-transform: uppercase; letter-spacing: .05em; }
+.badge.neu { background: rgba(224,178,90,.15); color: var(--warn); }
+.badge.bestaetigt { background: rgba(111,191,138,.15); color: var(--ok); }
+.badge.vorschlag { background: rgba(122,167,217,.15); color: var(--info); }
+.badge.storniert, .badge.noshow { background: rgba(217,122,111,.15); color: var(--bad); }
+.actions { display: flex; gap: .4rem; flex-wrap: wrap; }
+.actions button, .actions select { background: transparent; border: 1px solid var(--line); color: var(--text);
+                  border-radius: 6px; padding: .35rem .7rem; cursor: pointer; font: inherit; font-size: .8rem; }
+.actions select { background: var(--panel); }
+.actions button:hover { border-color: var(--accent); color: var(--accent); }
+.empty { color: var(--muted); text-align: center; padding: 3rem 0; }
+
+/* ---- Auslastung ---- */
+.load { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.load .chip { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+              padding: .35rem .7rem; font-size: .8rem; font-variant-numeric: tabular-nums; }
+.load .chip b { font-weight: 600; }
+.load .chip.warn { border-color: var(--warn); color: var(--warn); }
+.load .chip.full { border-color: var(--bad); color: var(--bad); }
+.load-lbl { font-size: .72rem; color: var(--muted); text-transform: uppercase;
+            letter-spacing: .08em; margin: 0 0 .4rem; }
+
+/* ---- Formulare (Zeiten/Einstellungen) ---- */
+.settings { background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+            padding: 1.25rem; max-width: 520px; margin-bottom: 1rem; }
+.settings h2 { font-size: .95rem; margin: 0 0 .5rem; }
+.settings label { display: block; font-size: .8rem; color: var(--muted); margin: .9rem 0 .3rem; }
+.settings input[type=time], .settings input[type=number] {
+  background: rgba(255,255,255,.05); color: var(--text); border: 1px solid var(--line);
+  border-radius: 6px; padding: .45rem .6rem; font: inherit; width: 8rem; }
+.settings .days { display: flex; gap: .4rem; flex-wrap: wrap; }
+.settings .days label { display: flex; align-items: center; gap: .35rem; margin: 0;
+  border: 1px solid var(--line); border-radius: 8px; padding: .4rem .6rem; cursor: pointer;
+  color: var(--text); font-size: .82rem; }
+.settings .days label.closed { border-color: var(--bad); color: var(--bad); }
+.settings .row2 { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.settings .save { margin-top: 1.25rem; background: var(--accent); color: #1b130a;
+  font-weight: 600; font: inherit; border: 0; border-radius: 6px; padding: .55rem 1.2rem; cursor: pointer; }
+.settings .saved { color: var(--ok); font-size: .82rem; margin-left: .75rem; }
+
+/* ---- Platzhalter ---- */
+.placeholder { background: var(--panel); border: 1px dashed var(--line); border-radius: 10px;
+               padding: 2rem; max-width: 560px; }
+.placeholder .soon { display: inline-block; background: rgba(122,167,217,.15); color: var(--info);
+                     font-size: .7rem; text-transform: uppercase; letter-spacing: .08em;
+                     border-radius: 999px; padding: .25rem .7rem; margin-bottom: .9rem; }
+.placeholder p { color: var(--muted); font-size: .9rem; line-height: 1.6; margin: 0; }
+
+/* ---- Übersicht ---- */
+.today-line { background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+              padding: .8rem 1.1rem; margin-bottom: 1.5rem; font-size: .9rem; }
+.today-line.closed { border-left: 3px solid var(--bad); }
+.today-line b { color: var(--accent); }
+.attn-lbl { font-size: .72rem; color: var(--muted); text-transform: uppercase;
+            letter-spacing: .08em; margin: 0 0 .5rem; }
+a.card { text-decoration: none; color: inherit; }
+a.card:hover { border-color: rgba(255,255,255,.25); }
+
+/* ---- SMS-Toast ---- */
+#toast { position: fixed; left: 50%; bottom: 1.25rem; transform: translateX(-50%);
+         max-width: 420px; width: calc(100% - 2rem); background: #232a33;
+         border: 1px solid var(--info); border-radius: 12px; padding: .9rem 1.1rem;
+         box-shadow: 0 16px 48px rgba(0,0,0,.5); display: none; z-index: 10; }
+#toast.show { display: block; }
+#toast .to { font-size: .72rem; color: var(--info); text-transform: uppercase;
+             letter-spacing: .08em; margin-bottom: .4rem; }
+#toast .txt { font-size: .88rem; line-height: 1.5; }
+#toast .close { float: right; background: transparent; border: 0; color: var(--muted);
+                cursor: pointer; font-size: .9rem; padding: 0 0 0 .5rem; }
+
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 1px; }
