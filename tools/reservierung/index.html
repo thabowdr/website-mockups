@@ -60,11 +60,17 @@
     }
     inbox.innerHTML = items.map(function (m) {
       const t = new Date(m.ts).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-      const reply = (m.resv.status === 'vorschlag' && m.text.indexOf('[Zusage-Link]') !== -1)
-        ? `<div class="reply">
+      let reply = '';
+      if (m.resv.status === 'vorschlag' && m.text.indexOf('[Zusage-Link]') !== -1) {
+        reply = `<div class="reply">
              <button data-reply="accept" data-id="${m.resv.id}">Zusagen</button>
              <button data-reply="decline" data-id="${m.resv.id}">Ablehnen</button>
-           </div>` : '';
+           </div>`;
+      } else if (m.resv.status === 'bestaetigt' && m.text.indexOf('[Storno-Link]') !== -1) {
+        reply = `<div class="reply">
+             <button data-reply="cancel" data-id="${m.resv.id}">Reservierung stornieren</button>
+           </div>`;
+      }
       return `<div class="sms">
         <div class="from">SMS an ${m.resv.phone} · ${t} Uhr</div>
         ${m.text}${reply}
@@ -76,6 +82,7 @@
     const btn = e.target.closest('button[data-reply]');
     if (!btn) return;
     if (btn.dataset.reply === 'accept') ResvStore.acceptProposal(restaurantId, btn.dataset.id);
+    else if (btn.dataset.reply === 'cancel') ResvStore.cancelByGuest(restaurantId, btn.dataset.id);
     else ResvStore.declineProposal(restaurantId, btn.dataset.id);
     renderInbox();
   });

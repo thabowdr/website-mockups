@@ -49,6 +49,34 @@
   .actions select { background: var(--panel); }
   .empty { color: var(--muted); text-align: center; padding: 3rem 0; }
 
+  /* Auslastung je Uhrzeit */
+  .load { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .load .chip { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+                padding: .35rem .7rem; font-size: .8rem; font-variant-numeric: tabular-nums; }
+  .load .chip b { font-weight: 600; }
+  .load .chip.warn { border-color: var(--warn); color: var(--warn); }
+  .load .chip.full { border-color: var(--bad); color: var(--bad); }
+  .load-lbl { font-size: .72rem; color: var(--muted); text-transform: uppercase;
+              letter-spacing: .08em; margin: 0 0 .4rem; }
+
+  /* Einstellungen */
+  .settings { background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+              padding: 1.25rem; max-width: 480px; }
+  .settings h2 { font-size: .95rem; margin: 0 0 1rem; }
+  .settings label { display: block; font-size: .8rem; color: var(--muted); margin: .9rem 0 .3rem; }
+  .settings input[type=time], .settings input[type=number] {
+    background: rgba(255,255,255,.05); color: var(--text); border: 1px solid var(--line);
+    border-radius: 6px; padding: .45rem .6rem; font: inherit; width: 8rem; }
+  .settings .days { display: flex; gap: .4rem; flex-wrap: wrap; }
+  .settings .days label { display: flex; align-items: center; gap: .35rem; margin: 0;
+    border: 1px solid var(--line); border-radius: 8px; padding: .4rem .6rem; cursor: pointer;
+    color: var(--text); font-size: .82rem; }
+  .settings .days label.closed { border-color: var(--bad); color: var(--bad); }
+  .settings .row2 { display: flex; gap: 1.5rem; }
+  .settings button { margin-top: 1.25rem; background: var(--accent); color: #1b130a;
+    font-weight: 600; font: inherit; border: 0; border-radius: 6px; padding: .55rem 1.2rem; cursor: pointer; }
+  .settings .saved { color: var(--ok); font-size: .82rem; margin-left: .75rem; }
+
   /* Simulierte SMS-Vorschau */
   #toast { position: fixed; left: 50%; bottom: 1.25rem; transform: translateX(-50%);
            max-width: 420px; width: calc(100% - 2rem); background: #232a33;
@@ -81,6 +109,7 @@
     <button data-tab="heute" class="active">Heute</button>
     <button data-tab="kommend">Kommend</button>
     <button data-tab="alle">Alle</button>
+    <button data-tab="einstellungen">Einstellungen</button>
   </div>
   <div id="list"></div>
 </main>
@@ -112,14 +141,66 @@
   }
   function fmtDate(d) { return d.split('-').reverse().join('.'); }
   function timeOptions(except) {
-    const out = [];
-    for (let h = 11; h <= 21; h++) {
-      ['00', '30'].forEach(function (m) {
-        const t = h + ':' + m;
-        if (t !== except) out.push('<option>' + t + '</option>');
+    return ResvStore.slots(restaurantId)
+      .filter(function (t) { return t !== except; })
+      .map(function (t) { return '<option>' + t + '</option>'; })
+      .join('');
+  }
+
+  function renderSettings() {
+    const cfg = ResvStore.getConfig(restaurantId);
+    const dayOrder = [1, 2, 3, 4, 5, 6, 0]; // Mo … So
+    document.getElementById('list').innerHTML = `
+      <div class="settings">
+        <h2>Öffnungszeiten &amp; Ruhetage</h2>
+        <label>Ruhetage (angehakt = geschlossen)</label>
+        <div class="days">
+          ${dayOrder.map(function (d) {
+            const closed = cfg.closedDays.indexOf(d) !== -1;
+            return `<label class="${closed ? 'closed' : ''}">
+              <input type="checkbox" data-day="${d}" ${closed ? 'checked' : ''}>
+              ${ResvStore.dayNames[d].slice(0, 2)}</label>`;
+          }).join('')}
+        </div>
+        <div class="row2">
+          <div><label>Geöffnet ab</label><input type="time" id="cfg-open" value="${cfg.open}"></div>
+          <div><label>Letzte Reservierung</label><input type="time" id="cfg-close" value="${cfg.close}"></div>
+        </div>
+        <label>Plätze gesamt</label>
+        <input type="number" id="cfg-seats" min="1" value="${cfg.seats}">
+        <div>
+          <button type="button" id="cfg-save">Speichern</button>
+          <span class="saved" id="cfg-saved"></span>
+        </div>
+      </div>`;
+    document.getElementById('cfg-save').addEventListener('click', function () {
+      const closedDays = Array.prototype.slice
+        .call(document.querySelectorAll('.days input:checked'))
+        .map(function (i) { return Number(i.dataset.day); });
+      ResvStore.saveConfig(restaurantId, {
+        open: document.getElementById('cfg-open').value,
+        close: document.getElementById('cfg-close').value,
+        seats: Number(document.getElementById('cfg-seats').value),
+        closedDays: closedDays
       });
-    }
-    return out.join('');
+      document.getElementById('cfg-saved').textContent = 'Gespeichert – gilt sofort auch fürs Widget.';
+      document.querySelectorAll('.days label').forEach(function (l) {
+        l.classList.toggle('closed', l.querySelector('input').checked);
+      });
+    });
+  }
+
+  function loadChips(dateStr) {
+    const cfg = ResvStore.getConfig(restaurantId);
+    const load = ResvStore.slotLoad(restaurantId, dateStr);
+    const times = Object.keys(load).sort();
+    if (!times.length) return '';
+    return '<p class="load-lbl">Auslastung heute (von ' + cfg.seats + ' Plätzen)</p><div class="load">' +
+      times.map(function (t) {
+        const n = load[t];
+        const cls = n >= cfg.seats ? 'full' : (n >= cfg.seats * 0.8 ? 'warn' : '');
+        return '<span class="chip ' + cls + '">' + t + ' · <b>' + n + '</b>/' + cfg.seats + '</span>';
+      }).join('') + '</div>';
   }
 
   function showSms(phone, text) {
@@ -132,6 +213,10 @@
   });
 
   function render() {
+    if (tab === 'einstellungen') {
+      renderSettings();
+      return;
+    }
     const all = ResvStore.list(restaurantId)
       .slice()
       .sort(function (a, b) { return (a.date + a.time).localeCompare(b.date + b.time); });
@@ -150,11 +235,12 @@
     if (tab === 'kommend') rows = all.filter(function (r) { return r.date > today; });
 
     const list = document.getElementById('list');
+    const chips = tab === 'heute' ? loadChips(today) : '';
     if (!rows.length) {
-      list.innerHTML = '<div class="empty">Keine Reservierungen in dieser Ansicht.</div>';
+      list.innerHTML = chips + '<div class="empty">Keine Reservierungen in dieser Ansicht.</div>';
       return;
     }
-    list.innerHTML = rows.map(function (r) {
+    list.innerHTML = chips + rows.map(function (r) {
       const canAct = r.status === 'neu' || r.status === 'bestaetigt';
       let actions = '';
       if (proposing === r.id) {

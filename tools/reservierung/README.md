@@ -24,6 +24,22 @@ Grundstruktur für Online-Reservierung mit Dashboard, kopierbar in jedes Kundenp
 - Echter Versand später über einen SMS-Anbieter (z. B. seven.io, Twilio)
   serverseitig – die Texte kommen fertig aus `ResvStore.smsText()`.
 
+## Einstellungen, Kapazität, Schutz
+
+- **Öffnungszeiten & Ruhetage**: im Dashboard unter „Einstellungen“ pflegbar
+  (Standard: Montag Ruhetag, 11:00–21:30, 40 Plätze). Das Widget bietet nur
+  buchbare Zeiten an und sperrt Ruhetage mit Hinweis.
+- **Auslastung**: Tab „Heute“ zeigt belegte Plätze je Uhrzeit
+  (gelb ab 80 %, rot ab 100 %).
+- **Datenschutz**: Pflicht-Checkbox mit Speicher-/Löschhinweis am Formular.
+  Für den Live-Betrieb pro Kunde ergänzen: Datenschutzerklärung der Website
+  und AV-Vertrag.
+- **Spam-Schutz**: Honeypot-Feld, Mindest-Ausfüllzeit, max. 3 Anfragen pro
+  10 Minuten je Browser. Harte Grenzen später serverseitig.
+- **Gast-Storno (vorbereitet)**: Bestätigungs-SMS enthält einen
+  [Storno-Link]-Platzhalter; `ResvStore.cancelByGuest()` setzt den Status.
+  Im Live-Betrieb wird daraus eine kleine Bestätigungsseite hinter dem Link.
+
 ## Demo testen
 
 1. `index.html` öffnen, Reservierung abschicken.
