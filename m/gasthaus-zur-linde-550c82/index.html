@@ -139,7 +139,7 @@
       </h1>
       <p class="text-lg md:text-xl mb-10 max-w-xl" style="color:var(--muted)">Frische Küche und herzliche Gastfreundschaft – in Großolbersdorf und Umgebung.</p>
       <div class="flex flex-wrap gap-4">
-        <a href="tel:+49373699323" class="btn-primary px-8 py-3.5 rounded-sm">Tisch reservieren</a>
+        <a href="#reservieren" class="btn-primary px-8 py-3.5 rounded-sm">Tisch reservieren</a>
         <a href="#angebot" class="btn-ghost px-8 py-3.5 rounded-sm font-medium">Unser Angebot</a>
       </div>
     </div>
@@ -266,6 +266,28 @@
   </div>
 </section>
 
+<!-- Reservierung -->
+<section id="reservieren" class="border-t border-line">
+  <div class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+    <div class="text-center mb-14 fade-up">
+      <p class="label mb-4">05 &mdash; Ihren Tisch sichern</p>
+      <h2 class="font-display text-4xl md:text-5xl mb-4">Online reservieren</h2>
+      <div class="hairline mx-auto"></div>
+      <p class="mt-6 text-sm max-w-xl mx-auto" style="color:var(--muted)">
+        W&auml;hlen Sie Datum, Uhrzeit und Personenzahl &ndash; Sie erhalten die
+        Best&auml;tigung bequem per SMS. Lieber pers&ouml;nlich?
+        <a href="tel:+49373699323" class="text-accent hover:underline">Rufen Sie uns an.</a></p>
+    </div>
+    <div class="flex justify-center fade-up d1">
+      <div id="resv-widget" data-restaurant="gasthaus-zur-linde"
+           style="--resv-accent:#c08a4e; --resv-bg:var(--panel); --resv-text:var(--text);
+                  --resv-muted:var(--muted); --resv-line:var(--line); width:100%; max-width:420px;"></div>
+    </div>
+  </div>
+</section>
+<script src="../../tools/reservierung/env.js"></script>
+<script src="../../tools/reservierung/store.js"></script>
+<script src="../../tools/reservierung/widget.js"></script>
 
 <!-- FAQ -->
 <section class="max-w-3xl mx-auto px-4 pb-20 md:pb-28">
@@ -276,7 +298,7 @@
       <h3 class="font-medium">Kann ich einen Tisch reservieren?</h3>
       <i class="faq-i fas fa-chevron-down text-accent2 transition-transform"></i>
     </div>
-    <div class="faq-a"><p class="pt-4 text-sm leading-relaxed" style="color:var(--muted)">Sehr gern – rufen Sie uns einfach an, wir halten Ihnen Ihren Wunschtisch bereit.</p></div>
+    <div class="faq-a"><p class="pt-4 text-sm leading-relaxed" style="color:var(--muted)">Sehr gern – <a href="#reservieren" class="text-accent hover:underline">reservieren Sie direkt online</a> oder rufen Sie uns an, wir halten Ihnen Ihren Wunschtisch bereit.</p></div>
   </div>
   <div class="faq fade-up border-b border-line py-5 cursor-pointer" onclick="this.classList.toggle('open')">
     <div class="flex justify-between items-center gap-4">
