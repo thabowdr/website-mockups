@@ -15,7 +15,8 @@
   p { color: #a49c90; font-size: .9rem; line-height: 1.5; }
   a { color: #c08a4e; }
   .sms { background: #232a33; border: 1px solid rgba(122,167,217,.4); border-radius: 12px;
-         padding: .8rem 1rem; margin-bottom: .6rem; font-size: .85rem; line-height: 1.5; }
+         padding: .8rem 1rem; margin-bottom: .6rem; font-size: .85rem; line-height: 1.5;
+         overflow-wrap: break-word; }
   .sms .from { font-size: .7rem; color: #7aa7d9; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .3rem; }
   .sms .reply { margin-top: .6rem; display: flex; gap: .5rem; }
   .sms button { background: transparent; border: 1px solid rgba(255,255,255,.2); color: #f0ebe3;
@@ -29,31 +30,46 @@
   <h1>Reservierungs-Modul – Demo</h1>
   <p>So sieht das Widget eingebettet in einer Kundenseite aus.
      Eine abgeschickte Reservierung erscheint sofort im
-     <a href="dashboard.html?r=demo">Dashboard</a> (gern in einem zweiten Tab öffnen).</p>
+     <a href="../portal/index.html?r=demo">Betriebsportal</a> (gern in einem zweiten Tab öffnen).</p>
   <div id="resv-widget" data-restaurant="demo"></div>
 
   <h2>Gast-Handy (Simulation)</h2>
-  <p>Hier landen die SMS, die im Live-Betrieb an die angegebene Nummer gehen würden –
+  <p id="inbox-hint">Hier landen die SMS, die im Live-Betrieb an die angegebene Nummer gehen würden –
      inklusive Zusage bei einem Zeitvorschlag des Wirts.</p>
   <div id="inbox"><div class="sms-empty">Noch keine Nachrichten.</div></div>
 </div>
+<script src="env.js"></script>
 <script src="store.js"></script>
 <script src="widget.js"></script>
 <script>
 (function () {
   'use strict';
-  const restaurantId = 'demo';
+  const params = new URLSearchParams(location.search);
+  const restaurantId = params.get('r') || 'demo';
+  /* Im api-Modus braucht der SMS-Ausgang das Wirt-Token (?token=…) –
+     das Gast-Handy ist ein reines Vorführ-Werkzeug. */
+  if (ResvStore.mode === 'api') {
+    if (params.get('token')) ResvStore.setToken(restaurantId, params.get('token'));
+    else ResvStore.loadToken(restaurantId);
+  } else {
+    ResvStore.seedDemo(restaurantId);
+  }
 
-  function renderInbox() {
-    const all = ResvStore.list(restaurantId);
-    const items = [];
-    all.forEach(function (r) {
-      (r.messages || []).forEach(function (m) {
-        items.push({ ts: m.ts, text: m.text, resv: r });
-      });
-    });
-    items.sort(function (a, b) { return b.ts.localeCompare(a.ts); });
+  function linkify(text) {
+    return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  }
+
+  async function renderInbox() {
     const inbox = document.getElementById('inbox');
+    let items;
+    try {
+      items = await ResvStore.listNachrichten(restaurantId);
+    } catch (e) {
+      inbox.innerHTML = '<div class="sms-empty">' + (e.status === 401
+        ? 'SMS-Ausgang braucht das Wirt-Token: Seite mit ?token=… aufrufen.'
+        : 'Fehler: ' + e.message) + '</div>';
+      return;
+    }
     if (!items.length) {
       inbox.innerHTML = '<div class="sms-empty">Noch keine Nachrichten.</div>';
       return;
@@ -61,33 +77,32 @@
     inbox.innerHTML = items.map(function (m) {
       const t = new Date(m.ts).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
       let reply = '';
-      if (m.resv.status === 'vorschlag' && m.text.indexOf('[Zusage-Link]') !== -1) {
-        reply = `<div class="reply">
-             <button data-reply="accept" data-id="${m.resv.id}">Zusagen</button>
-             <button data-reply="decline" data-id="${m.resv.id}">Ablehnen</button>
-           </div>`;
-      } else if (m.resv.status === 'bestaetigt' && m.text.indexOf('[Storno-Link]') !== -1) {
-        reply = `<div class="reply">
-             <button data-reply="cancel" data-id="${m.resv.id}">Reservierung stornieren</button>
-           </div>`;
+      /* Antwort-Knöpfe nur im local-Modus; im api-Modus steht der echte /g/-Link in der SMS. */
+      if (m.resv && m.resv.status === 'vorschlag' && m.event === 'vorschlag') {
+        reply = '<div class="reply">' +
+          '<button data-reply="accept" data-id="' + m.resv.id + '">Zusagen</button>' +
+          '<button data-reply="decline" data-id="' + m.resv.id + '">Ablehnen</button></div>';
+      } else if (m.resv && m.resv.status === 'bestaetigt' && m.event === 'bestaetigt') {
+        reply = '<div class="reply">' +
+          '<button data-reply="cancel" data-id="' + m.resv.id + '">Reservierung stornieren</button></div>';
       }
-      return `<div class="sms">
-        <div class="from">SMS an ${m.resv.phone} · ${t} Uhr</div>
-        ${m.text}${reply}
-      </div>`;
+      return '<div class="sms"><div class="from">SMS an ' + m.to_phone + ' · ' + t + ' Uhr</div>' +
+        linkify(m.text) + reply + '</div>';
     }).join('');
   }
 
-  document.getElementById('inbox').addEventListener('click', function (e) {
+  document.getElementById('inbox').addEventListener('click', async function (e) {
     const btn = e.target.closest('button[data-reply]');
     if (!btn) return;
-    if (btn.dataset.reply === 'accept') ResvStore.acceptProposal(restaurantId, btn.dataset.id);
-    else if (btn.dataset.reply === 'cancel') ResvStore.cancelByGuest(restaurantId, btn.dataset.id);
-    else ResvStore.declineProposal(restaurantId, btn.dataset.id);
+    if (btn.dataset.reply === 'accept') await ResvStore.acceptProposal(restaurantId, btn.dataset.id);
+    else if (btn.dataset.reply === 'cancel') await ResvStore.cancelByGuest(restaurantId, btn.dataset.id);
+    else await ResvStore.declineProposal(restaurantId, btn.dataset.id);
     renderInbox();
   });
 
   window.addEventListener('storage', renderInbox);
+  /* Im api-Modus alle 10 s aktualisieren (kein storage-Event über Server). */
+  if (ResvStore.mode === 'api') setInterval(renderInbox, 10000);
   renderInbox();
 })();
 </script>

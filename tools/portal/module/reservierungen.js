@@ -1,4 +1,4 @@
-/* Modul Reservierungen – Eingangs-Workflow (umgezogen aus reservierung/dashboard.html). */
+/* Modul Reservierungen – Eingangs-Workflow (api- und local-Modus). */
 (function () {
   'use strict';
 
@@ -15,38 +15,22 @@
     group: 'eingang',
     subtitle: 'Tischanfragen bestätigen, Zeiten vorschlagen, Auslastung im Blick.',
 
-    badge(ctx) {
-      return ctx.store.list(ctx.restaurantId).filter(function (r) {
-        return r.status === 'neu';
-      }).length;
+    async badge(ctx) {
+      const all = await ctx.store.list(ctx.restaurantId);
+      return all.filter(function (r) { return r.status === 'neu'; }).length;
     },
 
-    render(container, ctx) {
+    async render(container, ctx) {
       const store = ctx.store;
       const ui = ctx.ui;
       const rid = ctx.restaurantId;
 
+      /* Erster Zugriff wirft im api-Modus ohne gültiges Token 401 → Login. */
+      await store.list(rid);
+
       function inDays(dateStr, n) {
         const diff = (new Date(dateStr) - new Date(today())) / 86400000;
         return diff >= 0 && diff < n;
-      }
-      function timeOptions(except) {
-        return store.slots(rid)
-          .filter(function (t) { return t !== except; })
-          .map(function (t) { return '<option>' + t + '</option>'; })
-          .join('');
-      }
-      function loadChips(dateStr) {
-        const cfg = store.getConfig(rid);
-        const load = store.slotLoad(rid, dateStr);
-        const times = Object.keys(load).sort();
-        if (!times.length) return '';
-        return '<p class="load-lbl">Auslastung heute (von ' + cfg.seats + ' Plätzen)</p><div class="load">' +
-          times.map(function (t) {
-            const n = load[t];
-            const cls = n >= cfg.seats ? 'full' : (n >= cfg.seats * 0.8 ? 'warn' : '');
-            return '<span class="chip ' + cls + '">' + t + ' · <b>' + n + '</b>/' + cfg.seats + '</span>';
-          }).join('') + '</div>';
       }
 
       const statsEl = document.createElement('div');
@@ -59,10 +43,13 @@
       ], tab, function (t) { tab = t; renderList(); }));
       container.appendChild(listEl);
 
-      function renderList() {
-        const all = store.list(rid)
+      async function renderList() {
+        const all = (await store.list(rid))
           .slice()
           .sort(function (a, b) { return (a.date + a.time).localeCompare(b.date + b.time); });
+        const cfg = await store.getConfig(rid);
+        const slots = await store.slots(rid);
+        const load = tab === 'heute' ? await store.slotLoad(rid, today()) : {};
 
         const todays = all.filter(function (r) { return r.date === today() && r.status !== 'storniert'; });
         statsEl.innerHTML = ui.statCards([
@@ -76,7 +63,17 @@
         if (tab === 'heute') rows = all.filter(function (r) { return r.date === today(); });
         if (tab === 'kommend') rows = all.filter(function (r) { return r.date > today(); });
 
-        const chips = tab === 'heute' ? loadChips(today()) : '';
+        let chips = '';
+        const times = Object.keys(load).sort();
+        if (times.length) {
+          chips = '<p class="load-lbl">Auslastung heute (von ' + cfg.seats + ' Plätzen)</p><div class="load">' +
+            times.map(function (t) {
+              const n = load[t];
+              const cls = n >= cfg.seats ? 'full' : (n >= cfg.seats * 0.8 ? 'warn' : '');
+              return '<span class="chip ' + cls + '">' + t + ' · <b>' + n + '</b>/' + cfg.seats + '</span>';
+            }).join('') + '</div>';
+        }
+
         if (!rows.length) {
           listEl.innerHTML = chips + '<div class="empty">Keine Reservierungen in dieser Ansicht.</div>';
           return;
@@ -85,7 +82,10 @@
           const canAct = r.status === 'neu' || r.status === 'bestaetigt';
           let actions = '';
           if (proposing === r.id) {
-            actions = '<select id="prop-time">' + timeOptions(r.time) + '</select>' +
+            actions = '<select id="prop-time">' +
+              slots.filter(function (t) { return t !== r.time; })
+                .map(function (t) { return '<option>' + t + '</option>'; }).join('') +
+              '</select>' +
               '<button data-act="propose-send" data-id="' + r.id + '">Vorschlag senden</button>' +
               '<button data-act="propose-cancel">Abbrechen</button>';
           } else {
@@ -107,7 +107,7 @@
         }).join('');
       }
 
-      listEl.addEventListener('click', function (e) {
+      listEl.addEventListener('click', async function (e) {
         const btn = e.target.closest('button[data-act]');
         if (!btn) return;
         const act = btn.dataset.act;
@@ -118,19 +118,19 @@
           proposing = null;
         } else if (act === 'propose-send') {
           const time = listEl.querySelector('#prop-time').value;
-          const text = ctx.store.propose(rid, id, time, ctx.restaurantName);
+          const r = await ctx.store.get(rid, id);
+          const text = await ctx.store.propose(rid, id, time, ctx.restaurantName);
           proposing = null;
-          const r = ctx.store.get(rid, id);
           if (text && r) ui.toast(r.phone, text);
         } else {
-          const text = ctx.store.setStatus(rid, id, act, ctx.restaurantName);
-          const r = ctx.store.get(rid, id);
+          const r = await ctx.store.get(rid, id);
+          const text = await ctx.store.setStatus(rid, id, act, ctx.restaurantName);
           if (text && r && (act === 'bestaetigt' || act === 'storniert')) ui.toast(r.phone, text);
         }
         renderList();
       });
 
-      renderList();
+      await renderList();
     }
   });
 })();

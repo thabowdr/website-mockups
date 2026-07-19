@@ -8,10 +8,10 @@
     group: 'inhalte',
     subtitle: 'Gilt sofort für das Reservierungs-Widget auf der Website.',
 
-    render(container, ctx) {
+    async render(container, ctx) {
       const store = ctx.store;
       const rid = ctx.restaurantId;
-      const cfg = store.getConfig(rid);
+      const cfg = await store.getConfig(rid);
       const dayOrder = [1, 2, 3, 4, 5, 6, 0]; // Mo … So
 
       container.innerHTML = `
@@ -43,17 +43,21 @@
           („bei Google steht offen, war aber zu“) verschwindet.</p>
         </div>`;
 
-      container.querySelector('#cfg-save').addEventListener('click', function () {
+      container.querySelector('#cfg-save').addEventListener('click', async function () {
         const closedDays = Array.prototype.slice
           .call(container.querySelectorAll('.days input:checked'))
           .map(function (i) { return Number(i.dataset.day); });
-        store.saveConfig(rid, {
-          open: container.querySelector('#cfg-open').value,
-          close: container.querySelector('#cfg-close').value,
-          seats: Number(container.querySelector('#cfg-seats').value),
-          closedDays: closedDays
-        });
-        container.querySelector('#cfg-saved').textContent = 'Gespeichert – gilt sofort auch fürs Widget.';
+        try {
+          await store.saveConfig(rid, {
+            open: container.querySelector('#cfg-open').value,
+            close: container.querySelector('#cfg-close').value,
+            seats: Number(container.querySelector('#cfg-seats').value),
+            closedDays: closedDays
+          });
+          container.querySelector('#cfg-saved').textContent = 'Gespeichert – gilt sofort auch fürs Widget.';
+        } catch (e) {
+          container.querySelector('#cfg-saved').textContent = 'Fehler: ' + e.message;
+        }
         container.querySelectorAll('.days label').forEach(function (l) {
           l.classList.toggle('closed', l.querySelector('input').checked);
         });

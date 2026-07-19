@@ -6,6 +6,23 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Betriebsportal</title>
 <link rel="stylesheet" href="portal.css">
+<style>
+  /* Login-Überlagerung (nur api-Modus) */
+  #login { position: fixed; inset: 0; background: rgba(20,22,26,.92); display: none;
+           place-items: center; z-index: 20; }
+  #login.show { display: grid; }
+  #login .box { background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+                padding: 2rem; max-width: 340px; width: calc(100% - 2rem); }
+  #login h2 { font-size: 1rem; margin: 0 0 .5rem; }
+  #login p { color: var(--muted); font-size: .85rem; line-height: 1.5; }
+  #login input { width: 100%; box-sizing: border-box; padding: .6rem .7rem; font: inherit;
+                 background: rgba(255,255,255,.05); color: var(--text);
+                 border: 1px solid var(--line); border-radius: 6px; }
+  #login button { margin-top: 1rem; width: 100%; padding: .65rem; background: var(--accent);
+                  color: #1b130a; font-weight: 600; font: inherit; border: 0; border-radius: 6px; cursor: pointer; }
+  #login .err { color: var(--bad); font-size: .82rem; margin-top: .5rem; display: none; }
+  #login .err.show { display: block; }
+</style>
 </head>
 <body>
 <div class="shell">
@@ -24,6 +41,16 @@
   <div class="to"></div>
   <div class="txt"></div>
 </div>
+<div id="login">
+  <div class="box">
+    <h2>Anmeldung</h2>
+    <p>Bitte das Zugangs-Token deines Betriebs eingeben (steht in deinen Unterlagen).</p>
+    <input type="password" id="login-token" autocomplete="current-password" placeholder="Zugangs-Token">
+    <div class="err" id="login-err"></div>
+    <button type="button" id="login-go">Anmelden</button>
+  </div>
+</div>
+<script src="env.js"></script>
 <script src="core/store.js"></script>
 <script src="core/ui.js"></script>
 <script>
@@ -51,6 +78,7 @@
     ui: window.PortalUI
   };
   ctx.store.seedDemo(ctx.restaurantId);
+  if (ctx.store.mode === 'api') ctx.store.loadToken(ctx.restaurantId);
   document.getElementById('brand-sub').textContent = ctx.restaurantName;
 
   const GROUPS = [
@@ -64,15 +92,21 @@
     return Portal.modules.some(function (m) { return m.id === id; }) ? id : Portal.modules[0].id;
   }
 
-  function renderNav() {
+  async function renderNav() {
     const active = currentId();
+    const counts = {};
+    for (const m of Portal.modules) {
+      if (m.badge) {
+        try { counts[m.id] = await m.badge(ctx); } catch (e) { counts[m.id] = 0; }
+      }
+    }
     const nav = document.getElementById('nav');
     nav.innerHTML = GROUPS.map(function (g) {
       const mods = Portal.modules.filter(function (m) { return (m.group || '') === g.id; });
       if (!mods.length) return '';
       return (g.label ? '<p class="group">' + g.label + '</p>' : '') +
         mods.map(function (m) {
-          const count = m.badge ? m.badge(ctx) : 0;
+          const count = counts[m.id] || 0;
           return '<a href="#' + m.id + '"' + (m.id === active ? ' class="active"' : '') + '>' +
             '<span>' + m.title + '</span>' +
             (count ? '<span class="count">' + count + '</span>' : '') + '</a>';
@@ -80,15 +114,40 @@
     }).join('');
   }
 
-  function renderModule() {
+  function showLogin(msg) {
+    const el = document.getElementById('login');
+    el.classList.add('show');
+    const err = document.getElementById('login-err');
+    if (msg) { err.textContent = msg; err.classList.add('show'); }
+    document.getElementById('login-token').focus();
+  }
+
+  async function renderModule() {
     const mod = Portal.modules.find(function (m) { return m.id === currentId(); });
     document.getElementById('mod-title').textContent = mod.title;
     document.getElementById('mod-sub').textContent = mod.subtitle || '';
     const container = document.getElementById('module');
     container.innerHTML = '';
-    mod.render(container, ctx);
+    try {
+      await mod.render(container, ctx);
+      document.getElementById('login').classList.remove('show');
+    } catch (e) {
+      if (e && e.status === 401) {
+        showLogin(ctx.store.loadToken(ctx.restaurantId) ? 'Token ungültig – bitte neu eingeben.' : '');
+        return;
+      }
+      container.innerHTML = '<div class="empty">Fehler: ' + (e && e.message || e) + '</div>';
+    }
     renderNav();
   }
+
+  document.getElementById('login-go').addEventListener('click', async function () {
+    ctx.store.setToken(ctx.restaurantId, document.getElementById('login-token').value.trim());
+    await renderModule();
+  });
+  document.getElementById('login-token').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') document.getElementById('login-go').click();
+  });
 
   window.addEventListener('hashchange', renderModule);
   /* Änderungen aus anderen Tabs (Widget, Gast-Antwort) live übernehmen. */

@@ -8,19 +8,20 @@
     group: '',
     subtitle: 'Alles Wichtige von heute auf einen Blick.',
 
-    render(container, ctx) {
+    async render(container, ctx) {
       const store = ctx.store;
       const ui = ctx.ui;
       const rid = ctx.restaurantId;
       const today = new Date().toISOString().slice(0, 10);
 
-      const all = store.list(rid);
+      const all = await store.list(rid);
+      const cfg = await store.getConfig(rid);
+      const closed = await store.closedOn(rid, today);
+
       const todays = all.filter(function (r) { return r.date === today && r.status !== 'storniert'; });
       const open = all.filter(function (r) { return r.status === 'neu' || r.status === 'vorschlag'; })
         .sort(function (a, b) { return (a.date + a.time).localeCompare(b.date + b.time); });
 
-      const closed = store.closedOn(rid, today);
-      const cfg = store.getConfig(rid);
       const todayLine = closed
         ? '<div class="today-line closed">Heute ist <b>' + closed + '</b> – Ruhetag. Das Widget nimmt heute keine Reservierungen an.</div>'
         : '<div class="today-line">Heute geöffnet: <b>' + cfg.open + '–' + cfg.close + ' Uhr</b> · ' + cfg.seats + ' Plätze</div>';

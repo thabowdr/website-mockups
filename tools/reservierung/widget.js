@@ -3,14 +3,14 @@
  *
  * Einbau in eine Kundenseite:
  *   <div id="resv-widget" data-restaurant="gasthaus-zur-linde"></div>
+ *   <script src="env.js"></script>   <!-- setzt window.RESV_API, wenn ein Server dahinter steht -->
  *   <script src="store.js"></script>
  *   <script src="widget.js"></script>
  *
  * Farben über CSS-Variablen an das jeweilige Design anpassen:
  *   --resv-accent, --resv-bg, --resv-text, --resv-muted, --resv-line
  *
- * Öffnungszeiten/Ruhetage kommen aus ResvStore.getConfig() und werden im
- * Dashboard unter „Einstellungen“ gepflegt.
+ * Öffnungszeiten/Ruhetage kommen aus der Betriebs-Konfiguration (Portal → Öffnungszeiten).
  */
 (function () {
   'use strict';
@@ -39,6 +39,7 @@
       background: var(--accent); color: #1b130a; font-weight: 600; font: inherit;
       border: 0; border-radius: 6px; cursor: pointer; }
     .resv button:hover { filter: brightness(1.1); }
+    .resv button[disabled] { opacity: .6; cursor: wait; }
     .resv .ok { text-align: center; padding: 1.5rem 0; }
     .resv .ok strong { color: var(--accent); }
     .resv .err { color: #d97a6f; font-size: .85rem; margin-top: .5rem; display: none; }
@@ -49,17 +50,12 @@
     .resv .hp { position: absolute; left: -9999px; height: 0; overflow: hidden; }
   `;
 
-  function timeOptions() {
-    return ResvStore.slots(restaurantId)
-      .map(function (t) { return '<option>' + t + '</option>'; })
-      .join('');
-  }
-
   const today = new Date().toISOString().slice(0, 10);
   const renderedAt = Date.now();
 
-  /* Einfacher Spam-Schutz im Browser; die harte Grenze kommt später serverseitig. */
+  /* Client-seitige Bremse nur im local-Modus; im api-Modus limitiert der Server. */
   function tooMany() {
+    if (ResvStore.mode === 'api') return false;
     try {
       const k = 'resv:rate:' + restaurantId;
       const now = Date.now();
@@ -74,75 +70,99 @@
     }
   }
 
-  mount.innerHTML = `
-    <style>${css}</style>
-    <div class="resv">
-      <h3>Tisch reservieren</h3>
-      <form>
-        <div class="row">
-          <div><label>Datum</label><input type="date" name="date" min="${today}" value="${today}" required></div>
-          <div><label>Uhrzeit</label><select name="time">${timeOptions()}</select></div>
-        </div>
-        <div class="row">
-          <div><label>Personen</label><input type="number" name="guests" min="1" max="20" value="2" required></div>
-          <div><label>Telefon</label><input type="tel" name="phone" placeholder="0371 …" required></div>
-        </div>
-        <label>Name</label><input type="text" name="name" required>
-        <label>Anmerkung (optional)</label><textarea name="note" rows="2"></textarea>
-        <div class="hp" aria-hidden="true"><label>Website</label><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
-        <label class="privacy"><input type="checkbox" name="privacy" required>
-          <span>Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Reservierung
-          gespeichert und per SMS-Benachrichtigung verwendet werden. Die Daten werden
-          30 Tage nach dem Besuch gelöscht.</span></label>
-        <div class="err" role="alert"></div>
-        <button type="submit">Reservierung anfragen</button>
-      </form>
-    </div>`;
+  async function init() {
+    let slots;
+    try {
+      slots = await ResvStore.slots(restaurantId);
+    } catch (e) {
+      mount.innerHTML = '<style>' + css + '</style><div class="resv"><div class="err show">' +
+        'Reservierung derzeit nicht erreichbar – bitte rufen Sie uns an.</div></div>';
+      return;
+    }
 
-  const err = mount.querySelector('.err');
-  function showErr(msg) {
-    err.textContent = msg;
-    err.classList.add('show');
+    mount.innerHTML = `
+      <style>${css}</style>
+      <div class="resv">
+        <h3>Tisch reservieren</h3>
+        <form>
+          <div class="row">
+            <div><label>Datum</label><input type="date" name="date" min="${today}" value="${today}" required></div>
+            <div><label>Uhrzeit</label><select name="time">${slots.map(function (t) { return '<option>' + t + '</option>'; }).join('')}</select></div>
+          </div>
+          <div class="row">
+            <div><label>Personen</label><input type="number" name="guests" min="1" max="20" value="2" required></div>
+            <div><label>Telefon</label><input type="tel" name="phone" placeholder="0371 …" required></div>
+          </div>
+          <label>Name</label><input type="text" name="name" required>
+          <label>Anmerkung (optional)</label><textarea name="note" rows="2"></textarea>
+          <div class="hp" aria-hidden="true"><label>Website</label><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
+          <label class="privacy"><input type="checkbox" name="privacy" required>
+            <span>Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Reservierung
+            gespeichert und per SMS-Benachrichtigung verwendet werden. Die Daten werden
+            30 Tage nach dem Besuch gelöscht.</span></label>
+          <div class="err" role="alert"></div>
+          <button type="submit">Reservierung anfragen</button>
+        </form>
+      </div>`;
+
+    const err = mount.querySelector('.err');
+    function showErr(msg) {
+      err.textContent = msg;
+      err.classList.add('show');
+    }
+
+    mount.querySelector('input[name=date]').addEventListener('change', async function (e) {
+      const closed = await ResvStore.closedOn(restaurantId, e.target.value);
+      if (closed) showErr(closed + 's haben wir Ruhetag – bitte wählen Sie einen anderen Tag.');
+      else err.classList.remove('show');
+    });
+
+    mount.querySelector('form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const f = e.target;
+      err.classList.remove('show');
+
+      const closed = await ResvStore.closedOn(restaurantId, f.date.value);
+      if (closed) {
+        showErr(closed + 's haben wir Ruhetag – bitte wählen Sie einen anderen Tag.');
+        return;
+      }
+      /* Honeypot gefüllt oder unmenschlich schnell → still verwerfen (Server prüft zusätzlich). */
+      const isBot = f.website.value !== '' || Date.now() - renderedAt < 3000;
+      if (!isBot && tooMany()) {
+        showErr('Zu viele Anfragen in kurzer Zeit – bitte versuchen Sie es später erneut oder rufen Sie uns an.');
+        return;
+      }
+      const btn = f.querySelector('button[type=submit]');
+      btn.disabled = true;
+      try {
+        if (!isBot) {
+          await ResvStore.create(restaurantId, {
+            date: f.date.value,
+            time: f.time.value,
+            guests: Number(f.guests.value),
+            name: f.name.value.trim(),
+            phone: f.phone.value.trim(),
+            note: f.note.value.trim(),
+            website: f.website.value
+          });
+        }
+      } catch (ex) {
+        btn.disabled = false;
+        showErr(ex.status === 429
+          ? 'Zu viele Anfragen in kurzer Zeit – bitte versuchen Sie es später erneut oder rufen Sie uns an.'
+          : 'Das hat leider nicht geklappt: ' + ex.message);
+        return;
+      }
+      mount.querySelector('.resv').innerHTML = `
+        <div class="ok">
+          <strong>Vielen Dank, ${f.name.value.trim()}!</strong><br><br>
+          Ihre Anfrage für ${f.guests.value} Person(en) am ${f.date.value.split('-').reverse().join('.')}
+          um ${f.time.value} Uhr ist eingegangen.<br><br>
+          Sie erhalten in Kürze eine Bestätigung per SMS.
+        </div>`;
+    });
   }
 
-  mount.querySelector('input[name=date]').addEventListener('change', function (e) {
-    const closed = ResvStore.closedOn(restaurantId, e.target.value);
-    if (closed) showErr(closed + 's haben wir Ruhetag – bitte wählen Sie einen anderen Tag.');
-    else err.classList.remove('show');
-  });
-
-  mount.querySelector('form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const f = e.target;
-    err.classList.remove('show');
-
-    const closed = ResvStore.closedOn(restaurantId, f.date.value);
-    if (closed) {
-      showErr(closed + 's haben wir Ruhetag – bitte wählen Sie einen anderen Tag.');
-      return;
-    }
-    /* Honeypot gefüllt oder unmenschlich schnell abgeschickt → still verwerfen. */
-    const isBot = f.website.value !== '' || Date.now() - renderedAt < 3000;
-    if (!isBot && tooMany()) {
-      showErr('Zu viele Anfragen in kurzer Zeit – bitte versuchen Sie es später erneut oder rufen Sie uns an.');
-      return;
-    }
-    if (!isBot) {
-      ResvStore.create(restaurantId, {
-        date: f.date.value,
-        time: f.time.value,
-        guests: Number(f.guests.value),
-        name: f.name.value.trim(),
-        phone: f.phone.value.trim(),
-        note: f.note.value.trim()
-      });
-    }
-    mount.querySelector('.resv').innerHTML = `
-      <div class="ok">
-        <strong>Vielen Dank, ${f.name.value.trim()}!</strong><br><br>
-        Ihre Anfrage für ${f.guests.value} Person(en) am ${f.date.value.split('-').reverse().join('.')}
-        um ${f.time.value} Uhr ist eingegangen.<br><br>
-        Sie erhalten in Kürze eine Bestätigung per SMS.
-      </div>`;
-  });
+  init();
 })();
